@@ -20,13 +20,13 @@ class PDEProblem(object):
         if name in self.inputs_dict:
             raise ValueError('name has already been used for an input')
 
-        function.rename(name, name)
+        function.name = name
         self.inputs_dict[name] = dict(
             function=function,
         )
 
     def add_state(self, name, function, residual_form, *arguments):
-        function.rename(name, name)
+        function.name = name
         self.states_dict[name] = dict(
             function=function,
             residual_form=residual_form,

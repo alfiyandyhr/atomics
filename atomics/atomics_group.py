@@ -32,10 +32,16 @@ class AtomicsGroup(om.Group):
         self.options.declare('pde_problem', types=PDEProblem)
         self.options.declare(
             'linear_solver_',
-            default='petsc_cg_ilu',
+            default='petsc_cg_gamg',
             values=[
-                'fenics_direct', 'scipy_splu', 'fenics_krylov',
-                'petsc_gmres_ilu', 'scipy_cg', 'petsc_cg_ilu'
+                'fenics_direct',
+                'scipy_splu',
+                'fenics_krylov',
+                'petsc_gmres_ilu',
+                'petsc_gmres_bjacobi',
+                'scipy_cg',
+                'petsc_cg_ilu',
+                'petsc_cg_gamg',
             ],
         )
         self.options.declare(
