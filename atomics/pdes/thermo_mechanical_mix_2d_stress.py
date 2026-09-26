@@ -1,39 +1,41 @@
-import dolfin as df
-import pygmsh
+import ufl
 
-def get_residual_form(u, v, rho_e, T, T_hat, KAPPA, k, alpha, mode='plane_stress', method='RAMP', T_r=df.Constant(20.)):
-    if method=='RAMP':
-        p =8
-        C = rho_e/(1 + p * (1. - rho_e))
-    else:
+
+def get_residual_form(
+    u, v, rho_e, T, T_hat, KAPPA, k, alpha,
+    mode="plane_stress", method="RAMP", T_r=20.0,
+):
+    """Mixed thermoelastic/heat-conduction residual for DOLFINx/UFL.
+
+    Retains the original example's thermal-strain and stress convention.
+    The applied tractions and heat fluxes are subtracted by the caller.
+    """
+    if method == "RAMP":
+        C = rho_e / (1.0 + 8.0 * (1.0 - rho_e))
+    elif method == "SIMP":
         C = rho_e**3
+    else:
+        raise ValueError("method must be 'RAMP' or 'SIMP'")
 
-    E = k * C 
-    # C is the design variable, its values is from 0 to 1
+    E = k * C
+    nu = 0.3
+    mu = E / (2.0 * (1.0 + nu))
 
-    nu = 0.3 # Poisson's ratio
+    if mode == "plane_stress":
+        # Algebraically equivalent to the plane-stress Lamé conversion
+        # when E > 0, but avoids a 0/0 expression at E == 0.
+        lambda_ = E * nu / (1.0 - nu**2)
+    elif mode == "plane_strain":
+        lambda_ = E * nu / ((1.0 + nu) * (1.0 - 2.0 * nu))
+    else:
+        raise ValueError("mode must be 'plane_stress' or 'plane_strain'")
 
+    identity = ufl.Identity(u.ufl_shape[0])
+    strain = ufl.sym(ufl.grad(u)) - C * alpha * identity * (T - T_r)
+    stress = lambda_ * ufl.div(u) * identity + 2.0 * mu * strain
 
-    lambda_ = E * nu/(1. + nu)/(1 - 2 * nu)
-    mu = E / 2 / (1 + nu) #lame's parameters
-
-    if mode == 'plane_stress':
-        lambda_ = 2*mu*lambda_/(lambda_+2*mu)
-
-    # Th = df.Constant(7)
-    I = df.Identity(len(u))
-    T_0 = df.Constant(20.)
-    w_ij = 0.5 * (df.grad(u) + df.grad(u).T) - C * alpha * I * (T-T_0)
-    v_ij = 0.5 * (df.grad(v) + df.grad(v).T)
-
-    d = len(u)
-
-    sigm = lambda_*df.div(u)*df.Identity(d) + 2*mu*w_ij 
-
-    a = df.inner(sigm, v_ij) * df.dx + \
-        df.dot(C*KAPPA* df.grad(T),  df.grad(T_hat)) * df.dx
-    print("get a-------")
-    
-    return a
-
-
+    dx = ufl.Measure("dx", domain=u.ufl_domain())
+    return (
+        ufl.inner(stress, ufl.sym(ufl.grad(v))) * dx
+        + ufl.dot(C * KAPPA * ufl.grad(T), ufl.grad(T_hat)) * dx
+    )

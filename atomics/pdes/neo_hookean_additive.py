@@ -1,127 +1,141 @@
-import dolfin as df
-import numpy as np
+import ufl
+from dolfinx import fem
+from petsc4py import PETSc
 
-def get_residual_form(u, v, rho_e,V_density, tractionBC, T, iteration_number,additive ='strain',k = 8., method ='RAMP'):
 
-    df.dx = df.dx(metadata={"quadrature_degree":4}) 
-    # stiffness = rho_e/(1 + 8. * (1. - rho_e))
+def get_residual_form(
+    u,
+    v,
+    rho_e,
+    *,
+    additive="strain",
+    k=8.0,
+    method="RAMP",
+    c2_e=None,
+):
+    """
+    Construct the compressible neo-Hookean residual.
 
-    if method =='SIMP':
+    Parameters
+    ----------
+    u
+        Displacement Function.
+    v
+        Displacement test function.
+    rho_e
+        Material-density Function.
+    additive
+        ``"strain"``, ``"vol"``, or ``False``/``"False"``.
+    k
+        Solid-material Young's-modulus scale.
+    method
+        ``"SIMP"`` or ``"RAMP"``.
+    c2_e
+        Optional DOLFINx Function or Constant used by the strain-additive
+        model. If omitted, a spatially uniform value of 5e-4 is used.
+
+    Notes
+    -----
+    External traction is intentionally not included here. It should be
+    subtracted from the returned residual in the run file, as is done by
+    the other migrated examples.
+    """
+    mesh = u.function_space.mesh
+    dx = ufl.Measure(
+        "dx",
+        domain=mesh,
+        metadata={"quadrature_degree": 4},
+    )
+
+    method = method.upper()
+    if method == "SIMP":
         stiffness = rho_e**3
+    elif method == "RAMP":
+        stiffness = rho_e / (
+            1.0 + 8.0 * (1.0 - rho_e)
+        )
     else:
-        stiffness = rho_e/(1 + 8. * (1. - rho_e))
+        raise ValueError(
+            f"Unknown material interpolation method: {method!r}"
+        )
 
-    # print('the value of stiffness is:', rho_e.vector().get_local())
+    geometric_dimension = mesh.geometry.dim
+    identity = ufl.Identity(geometric_dimension)
+
     # Kinematics
-    d = len(u)
-    I = df.Identity(d)             # Identity tensor
-    F = I + df.grad(u)             # Deformation gradient
-    C = F.T*F                      # Right Cauchy-Green tensor
-    # Invariants of deformation tensors
-    Ic = df.tr(C)
-    J  = df.det(F)
-    stiffen_pow=1.
-    threshold_vol= 1.
+    deformation_gradient = identity + ufl.grad(u)
+    right_cauchy_green = (
+        deformation_gradient.T * deformation_gradient
+    )
+    ic = ufl.tr(right_cauchy_green)
+    jacobian = ufl.det(deformation_gradient)
 
-    eps_star= 0.05
-    # print("eps_star--------")
+    youngs_modulus = k * stiffness
+    additive_energy = 0.0
 
-    if additive == 'strain':
-        print("additive == strain")
+    if additive == "strain":
+        c1_e = (
+            k
+            * 5.0e-2
+            / (1.0 + 8.0 * (1.0 - 5.0e-2))
+            / 6.0
+        )
 
-        if iteration_number == 1:
-            print('iteration_number == 1')
-            eps = df.sym(df.grad(u))
-            eps_dev = eps - 1/3 * df.tr(eps) * df.Identity(2)
-            eps_eq = df.sqrt(2.0 / 3.0 * df.inner(eps_dev, eps_dev))
-            # eps_eq_proj = df.project(eps_eq, density_function_space)   
-            ratio = eps_eq / eps_star
-            ratio_proj  = df.project(ratio, V_density) 
+        if c2_e is None:
+            c2_e = fem.Constant(
+                mesh,
+                PETSc.ScalarType(5.0e-4),
+            )
 
-            c1_e = k*(5.e-2)/(1 + 8. * (1. - (5.e-2)))/6
+        # Preserve the invariant shift used by the legacy formulation.
+        ic_shift = ic - 3.0
+        additive_energy = (
+            (1.0 - stiffness)
+            * (
+                c1_e * ic_shift
+                + (c2_e * ic_shift) ** 2
+            )
+        )
 
-            c2_e = df.Function(V_density)
-            c2_e.vector().set_local(5e-4 * np.ones(V_density.dim()))
+    elif additive == "vol":
+        stiffen_power = 1.0
+        youngs_modulus = (
+            k * stiffness / jacobian**stiffen_power
+        )
 
-            fFile = df.HDF5File(df.MPI.comm_world,"c2_e_proj.h5","w")
-            fFile.write(c2_e,"/f")
-            fFile.close()
+    elif additive in (False, None, "False"):
+        pass
 
-            fFile = df.HDF5File(df.MPI.comm_world,"ratio_proj.h5","w")
-            fFile.write(ratio_proj,"/f")
-            fFile.close()
-            iteration_number += 1
-            E = k * stiffness 
-            phi_add = (1 - stiffness)*( (c1_e*(Ic-3)) + (c2_e*(Ic-3))**2)
+    else:
+        raise ValueError(
+            f"Unknown additive model: {additive!r}"
+        )
 
-        else:
-            ratio_proj = df.Function(V_density)
-            fFile = df.HDF5File(df.MPI.comm_world,"ratio_proj.h5","r")
-            fFile.read(ratio_proj,"/f")
-            fFile.close()
+    poisson_ratio = 0.4
+    lambda_ = (
+        youngs_modulus
+        * poisson_ratio
+        / (1.0 + poisson_ratio)
+        / (1.0 - 2.0 * poisson_ratio)
+    )
+    mu = (
+        youngs_modulus
+        / (2.0 * (1.0 + poisson_ratio))
+    )
 
+    # Compressible neo-Hookean strain-energy density.
+    strain_energy = (
+        0.5 * mu * (ic - 3.0)
+        - mu * ufl.ln(jacobian)
+        + 0.5 * lambda_ * ufl.ln(jacobian) ** 2
+    )
 
-            c2_e = df.Function(V_density)
-            fFile = df.HDF5File(df.MPI.comm_world,"c2_e_proj.h5","r")
-            fFile.read(c2_e,"/f")
-            fFile.close()
-            c1_e = k*(5.e-2)/(1 + 8. * (1. - (5.e-2)))/6
+    if additive == "strain":
+        strain_energy += additive_energy
 
-
-
-            
-
-            c2_e = df.conditional(df.le(ratio_proj,eps_star), c2_e * df.sqrt(ratio_proj), c2_e *(ratio_proj**3))
-            phi_add = (1 - stiffness)*( (c1_e*(Ic-3)) + (c2_e*(Ic-3))**2)
-            E = k * stiffness
-
-            c2_e_proj =df.project(c2_e, V_density) 
-            print('c2_e projected -------------')
-            
-            eps = df.sym(df.grad(u))
-            eps_dev = eps - 1/3 * df.tr(eps) * df.Identity(2)
-            eps_eq = df.sqrt(2.0 / 3.0 * df.inner(eps_dev, eps_dev))
-            # eps_eq_proj = df.project(eps_eq, V_density)   
-            ratio = eps_eq / eps_star
-            ratio_proj  = df.project(ratio, V_density) 
-
-            fFile = df.HDF5File(df.MPI.comm_world,"c2_e_proj.h5","w")
-            fFile.write(c2_e_proj,"/f")
-            fFile.close()
-
-            fFile = df.HDF5File(df.MPI.comm_world,"ratio_proj.h5","w")
-            fFile.write(ratio_proj,"/f")
-            fFile.close()
-
-    elif additive == 'vol':
-        print("additive == vol")
-        stiffness = stiffness/(df.det(F)**stiffen_pow)
-
-        # stiffness = df.conditional(df.le(df.det(F),threshold_vol), (stiffness/(df.det(F)/threshold_vol))**stiffen_pow, stiffness)
-        E = k * stiffness    
-
-    elif additive == 'False':
-        print("additive == False")
-        E = k * stiffness # rho_e is the design variable, its values is from 0 to 1
-
-    nu = 0.4 # Poisson's ratio
-
-    lambda_ = E * nu/(1. + nu)/(1 - 2 * nu)
-    mu = E / 2 / (1 + nu) #lame's parameters
-
-    # Stored strain energy density (compressible neo-Hookean model)
-    psi = (mu/2)*(Ic - 3) - mu*df.ln(J) + (lambda_/2)*(df.ln(J))**2
-    # print('the length of psi is:',len(psi.vector()))
-    if additive == 'strain':
-        psi+=phi_add
-    B  = df.Constant((0.0, 0.0)) 
-
-    # Total potential energy
-    '''The first term in this equation provided this error'''
-    Pi = psi*df.dx - df.dot(B, u)*df.dx - df.dot(T, u)*tractionBC 
-
-    res = df.derivative(Pi, u, v)
-    
-    return res
-
-
+    potential_energy = strain_energy * dx
+    return ufl.derivative(
+        potential_energy,
+        u,
+        v,
+    )
