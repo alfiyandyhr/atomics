@@ -1,52 +1,46 @@
 import numpy as np
-
-from openmdao.core.explicitcomponent import ExplicitComponent
+from openmdao.api import ExplicitComponent
 
 
 class CopyComp(ExplicitComponent):
-    """
-    CopyComp is a stock component implemented in OpenMDAO
-    to make copies of a variable and concatenate with itself.
-    Parameters
-    ----------
-    in_name : str
-        the name of the variable we want to copy
-    out_name : str
-        the output variable name
-    in_shape : int
-        the shape of the input variable
-    num_copies : int
-        number of copies
-    Returns
-    -------
-    outputs[out_name] : numpy array
-        the inputs[in_name] vector concatenated with its copies
-    """
+    """Copy a layer; optionally place copies in global DG0 DOF order."""
 
     def initialize(self):
-        self.options.declare('in_name', types=str)
-        self.options.declare('out_name', types=str)
-        self.options.declare('in_shape', types=int)
-        self.options.declare('num_copies', types=int)
+        self.options.declare("in_name", types=str)
+        self.options.declare("out_name", types=str)
+        self.options.declare("in_shape", types=int)
+        self.options.declare("num_copies", types=int)
+        # Entry i says which input-layer entry supplies output DOF i.
+        self.options.declare("out_to_in", default=None, allow_none=True)
 
     def setup(self):
-        in_name = self.options['in_name']
-        out_name = self.options['out_name']
-        in_shape = self.options['in_shape']
-        num_copies = self.options['num_copies']
-        out_shape = num_copies * (in_shape)
-
-        self.add_input(in_name, shape=in_shape)
-        self.add_output(out_name, shape=out_shape)
- 
-        row_indices = np.arange(in_shape * num_copies )
-        col_indices = np.tile(np.arange(in_shape), (num_copies))
-
-        self.declare_partials(of=out_name, wrt=in_name, rows=row_indices, cols=col_indices, val=1.)
+        n = self.options["in_shape"]
+        copies = self.options["num_copies"]
+        if n < 1 or copies < 1:
+            raise ValueError("in_shape and num_copies must be positive")
+        mapping = self.options["out_to_in"]
+        if mapping is None:
+            mapping = np.tile(np.arange(n, dtype=np.int64), copies)
+        else:
+            mapping = np.asarray(mapping)
+            if (
+                mapping.shape != (n * copies,)
+                or not np.issubdtype(mapping.dtype, np.integer)
+                or np.any(mapping < 0) or np.any(mapping >= n)
+            ):
+                raise ValueError("Invalid out_to_in mapping")
+            mapping = mapping.astype(np.int64)
+        self._source = mapping
+        a, b = self.options["in_name"], self.options["out_name"]
+        self.add_input(a, shape=n)
+        self.add_output(b, shape=n * copies)
+        self.declare_partials(
+            b, a,
+            rows=np.arange(n * copies, dtype=np.int64),
+            cols=mapping, val=1.0,
+        )
 
     def compute(self, inputs, outputs):
-        in_name = self.options['in_name']
-        out_name = self.options['out_name']
-        num_copies = self.options['num_copies']
-        
-        outputs[out_name] = np.tile(inputs[in_name], num_copies)
+        outputs[self.options["out_name"]] = (
+            inputs[self.options["in_name"]][self._source]
+        )

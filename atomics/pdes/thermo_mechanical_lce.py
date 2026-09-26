@@ -1,45 +1,51 @@
-import dolfin as df
-import pygmsh
+"""Small-strain, thermally actuated LCE residual for DOLFINx."""
 
-def get_residual_form(u, v, rho_e, phi_angle, k, alpha, method='RAMP'):
-    if method =='SIMP':
+import ufl
+
+
+def get_residual_form(u, v, rho_e, phi_angle, k, alpha, method="RAMP"):
+    """Return the original LCE weak residual.
+
+    ``u`` and ``v`` are three-component fields; ``rho_e`` and
+    ``phi_angle`` are scalar coefficient Functions. The return value is
+    a UFL form, not an assembled DOLFINx form.
+    """
+    if u.ufl_shape != (3,) or v.ufl_shape != (3,):
+        raise ValueError("The LCE residual requires 3D displacement fields")
+
+    if method == "SIMP":
         C = rho_e**3
+    elif method == "RAMP":
+        C = rho_e / (1.0 + 8.0 * (1.0 - rho_e))
     else:
-        C = rho_e/(1 + 8. * (1. - rho_e))
- 
+        raise ValueError(f"Unknown density interpolation: {method}")
 
-    E = k
-    # C is the design variable, its values is from 0 to 1
+    nu = 0.49
+    lame_lambda = k * nu / ((1.0 + nu) * (1.0 - 2.0 * nu))
+    mu = k / (2.0 * (1.0 + nu))
+    thermal_load = 1.0
 
-    nu = 0.49 # Poisson's ratio
+    strain_u = ufl.sym(ufl.grad(u))
+    strain_v = ufl.sym(ufl.grad(v))
 
-    lambda_ = E * nu/(1. + nu)/(1 - 2 * nu)
-    mu = E / 2 / (1 + nu) #lame's parameters
+    S = ufl.as_matrix(((-2.0, 0.0, 0.0),
+                       (0.0, 1.0, 0.0),
+                       (0.0, 0.0, 1.0)))
+    c = ufl.cos(phi_angle)
+    s = ufl.sin(phi_angle)
+    L = ufl.as_matrix(((c, s, 0.0),
+                       (-s, c, 0.0),
+                       (0.0, 0.0, 1.0)))
+    rotated_actuation = ufl.dot(ufl.transpose(L), ufl.dot(S, L))
 
-    # Th = df.Constant(5e1)
-    Th = df.Constant(1.)
-    # Th = df.Constant(5e0)
+    effective_strain = (
+        strain_u - alpha * C * thermal_load * rotated_actuation
+    )
 
-    w_ij = 0.5 * (df.grad(u) + df.grad(u).T)
-    v_ij = 0.5 * (df.grad(v) + df.grad(v).T)
-
-    S = df.as_matrix([[-2., 0., 0. ],
-                    [0. , 1., 0. ],
-                    [0. , 0., 1.]])
-
-    L = df.as_matrix([[ df.cos(phi_angle), df.sin(phi_angle), 0. ],
-                    [-df.sin(phi_angle), df.cos(phi_angle), 0. ],
-                    [ 0. , 0., 1. ]])
-
-
-    alpha_e = alpha*C
-    eps = w_ij - alpha_e*Th*L.T*S*L 
-
-    d = len(u)
-
-    sigm = lambda_*df.div(u)*df.Identity(d) + 2*mu*eps
-    a = df.inner(sigm, v_ij) * df.dx 
-    
-    return a
-
-
+    # Deliberately preserve the legacy model: its volumetric term is
+    # lambda * div(u), NOT lambda * tr(effective_strain).
+    stress = (
+        lame_lambda * ufl.div(u) * ufl.Identity(3)
+        + 2.0 * mu * effective_strain
+    )
+    return ufl.inner(stress, strain_v) * ufl.dx(domain=u.function_space.mesh)
