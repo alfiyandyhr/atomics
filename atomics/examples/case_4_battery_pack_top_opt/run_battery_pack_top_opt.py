@@ -1,484 +1,588 @@
-import dolfin as df
-from dolfin.function.constant import Constant
-import meshio
+from pathlib import Path
+
+import gmsh
 import numpy as np
-import pygmsh
-import scipy.sparse 
-from scipy import spatial
-
 import openmdao.api as om
+import ufl
+from basix.ufl import element, mixed_element
+from dolfinx import fem, io
+from dolfinx import mesh as dmesh
+from dolfinx.io import gmshio
+from mpi4py import MPI
+from petsc4py import PETSc
+from scipy.spatial import cKDTree
 
-from atomics.api import PDEProblem, AtomicsGroup
-from atomics.pdes.thermo_mechanical_mix_2d_stress import get_residual_form
-from atomics.general_filter_comp import GeneralFilterComp
-
+from atomics.api import AtomicsGroup, PDEProblem
 from atomics.extract_comp import ExtractComp
+from atomics.general_filter_comp import GeneralFilterComp
 from atomics.ksconstraints_comp import KSConstraintsComp
-
-
-'''
-1. Define constants
-'''
-
-# objective = 'mass'
-objective = 'compliance'
-# objective = 'mass' or 'compliance'
-
-
-# parameters for box
-LENGTH  =  20.0e-2
-WIDTH   =  20.0e-2
-HIGHT   =  5.e-2
-START_X = -10.0e-2
-START_Y = -10.0e-2
-START_Z = -2.5e-2
-
-# parameters for cylindars (cells)
-num_cell_x   =  5
-num_cell_y   =  5
-num_cells = num_cell_x*num_cell_y
-first_cell_x = -8e-2
-first_cell_y = -8e-2
-end_cell_x   =  8e-2
-end_cell_y   =  8e-2
-x = np.linspace(first_cell_x, end_cell_x, num_cell_x)
-y = np.linspace(first_cell_y, end_cell_y, num_cell_y)
-xv, yv = np.meshgrid(x, y)
-radius       =  0.01
-axis_cell    = [0.0, 0.0, HIGHT]
-A_cell = np.pi * (radius)**2
-A_whole = (LENGTH * WIDTH)
-cell_A_ratio = A_cell*(num_cell_x*num_cell_y)/A_whole
-
-A_cell_quart = A_cell*(num_cell_x*num_cell_y) / 4
-A_whole_quart = (LENGTH * WIDTH)/4
-
-A_actual = 4.5e-3
-A_now = A_whole_quart - A_cell_quart
-ratio_act = A_actual / A_now
-# 0.5599449298835663
-# constants for temperature field
-KAPPA = 235
-AREA_CYLINDER = 2 * np.pi * radius * HIGHT
-AREA_SIDE = WIDTH * HIGHT
-POWER = 90.
-T_0 = 20.
-q = df.Constant((POWER/AREA_CYLINDER)) # bdry heat flux
-q_half = df.Constant((POWER/AREA_CYLINDER))
-q_quart = df.Constant((POWER/AREA_CYLINDER))
-
-# constants for thermoelastic model
-K = 69e9
-ALPHA = 13e-6
-f_l = df.Constant(( 1.e6/HIGHT, 0.)) 
-f_r = df.Constant((-1.e6/HIGHT, 0.)) 
-f_b = df.Constant(( 0.,  1.e6/HIGHT)) 
-f_t = df.Constant(( 0., -1.e6/HIGHT))
-'''
-2. Define mesh
-'''
-
-#-----------------Generate--mesh----------------
-with pygmsh.occ.Geometry() as geom:
-    geom.characteristic_length_min = 0.003
-    geom.characteristic_length_max = 0.003
-    disk_dic = {}
-    disks = []
-
-    rectangle = geom.add_rectangle([START_X, START_Y, 0.], LENGTH, WIDTH)
-    for i in range(num_cells):
-        name = 'disk' + str(i)
-        disk_dic[name] = geom.add_disk([xv.flatten()[i], yv.flatten()[i], 0.], radius)
-        disks.append(disk_dic[name])
-
-    rectangle_1 = geom.add_rectangle([START_X, START_Y, 0.], LENGTH, WIDTH/2)
-    rectangle_2 = geom.add_rectangle([START_X, 0., 0.], LENGTH/2, WIDTH/2)
-    geom.boolean_difference(rectangle, geom.boolean_union([disks, rectangle_1, rectangle_2]))
-
-
-    mesh = geom.generate_mesh()
-    mesh.write("test_2d.vtk")
-
-
-#-----------------read--mesh-------------
-filename = 'test_2d.vtk'
-mesh = meshio.read(
-    filename,  
-    file_format="vtk" 
+from atomics.pdes.thermo_mechanical_mix_2d_stress import (
+    get_residual_form,
 )
-points = mesh.points
-cells = mesh.cells
-meshio.write_points_cells(
-    "test_2d.xml",
-    points,
-    cells,
-    )
-
-import os
-os.system('gmsh -2 test_2d.vtk -format msh2')
-os.system('dolfin-convert test_2d.msh mesh_2d.xml')
-mesh = df.Mesh("mesh_2d.xml")
-
-import matplotlib.pyplot as plt
-plt.figure(1)
-
-df.plot(mesh)
-# plt.show()
-
-'''
-3. Define traction bc subdomains
-'''
-
-#-----------define-heating-boundary-------
-class HeatBoundaryAll(df.SubDomain):
-    def inside(self, x, on_boundary):
-        cond_list = []
-        for i in range(num_cells):
-            cond = (abs(( x[0]-(xv.flatten()[i]) )**2 + ( x[1]-(yv.flatten()[i]) )**2) < (radius**2) + df.DOLFIN_EPS)
-            cond_list = cond_list or cond
-        return cond_list
-
-class HeatBoundary(df.SubDomain):
-    def inside(self, x, on_boundary):
-        cond_list = []
-        for i in [24, 23, 19, 18]:
-            cond = (abs(( x[0]-(xv.flatten()[i]) )**2 + ( x[1]-(yv.flatten()[i]) )**2) < (radius**2) + df.DOLFIN_EPS)
-            cond_list = cond_list or cond
-        return cond_list
-
-class HalfHeatBoundary(df.SubDomain):
-    def inside(self, x, on_boundary):
-        cond_list = []
-        for i in [22, 17, 14, 13]:
-            cond = (abs(( x[0]-(xv.flatten()[i]) )**2 + ( x[1]-(yv.flatten()[i]) )**2) < (radius**2) + df.DOLFIN_EPS)
-            cond_list = cond_list or cond
-        return cond_list
-
-class QuartHeatBoundary(df.SubDomain):
-    def inside(self, x, on_boundary):
-        return (abs(( x[0] - 0.)**2 + ( x[1] - 0.)**2) < (radius**2) + df.DOLFIN_EPS)
-
-#-----------define-surrounding-heat-sink-boundary-------
-class SurroundingBoundary(df.SubDomain):
-    def inside(self, x, on_boundary):
-        return ( 
-                # abs(x[0] -   START_X)  < df.DOLFIN_EPS or
-                abs(x[0] - (-START_X)) < df.DOLFIN_EPS or  
-                # abs(x[1] -   START_Y)  < df.DOLFIN_EPS or
-                abs(x[1] - (-START_Y)) < df.DOLFIN_EPS)
-
-# Mark the HeatBoundary ass dss(6)
-sub_domains = df.MeshFunction('size_t', mesh, mesh.topology().dim() - 1)
-heat_edge_all = HeatBoundaryAll()
-heat_edge = HeatBoundary()
-heat_edge_half = HalfHeatBoundary()
-heat_edge_quarter = QuartHeatBoundary()
-
-heat_edge_all.mark(sub_domains, 4)
-heat_edge.mark(sub_domains, 5)
-heat_edge_half.mark(sub_domains, 6)
-heat_edge_quarter.mark(sub_domains, 7)
-
-class MidHBoundary(df.SubDomain):
-    def inside(self, x, on_boundary):
-        return (abs(x[1] )< df.DOLFIN_EPS)
-class MidVBoundary(df.SubDomain):
-    def inside(self, x, on_boundary):
-        return (abs(x[0] )< df.DOLFIN_EPS)
-
-class RightBoundary(df.SubDomain):
-    def inside(self, x, on_boundary):
-        return (abs(x[0] + START_X)< df.DOLFIN_EPS)
-
-class BottomBoundary(df.SubDomain):
-    def inside(self, x, on_boundary):
-        return (abs(x[1] - START_Y)< df.DOLFIN_EPS)
-
-class TopBoundary(df.SubDomain):
-    def inside(self, x, on_boundary):
-        return (abs(x[1] + START_Y)< df.DOLFIN_EPS)
 
 
+comm = MPI.COMM_WORLD
 
-# Mark the traction boundaries 8 10 12 14
-# sub_domains = df.MeshFunction('size_t', mesh, mesh.topology().dim() - 1)
-# left_edge  = LeftBoundary()
-right_edge = RightBoundary()
-# bottom_edge = BottomBoundary()
-top_edge = TopBoundary()
-# left_edge.mark(sub_domains, 8)
-right_edge.mark(sub_domains, 10)
-# bottom_edge.mark(sub_domains, 12)
-top_edge.mark(sub_domains, 14)
+# Choose "mass" or "compliance".
+# objective = "compliance"
+objective = "mass"
 
-dss = df.Measure('ds')(subdomain_data=sub_domains)
+LENGTH = WIDTH = 0.20
+HIGHT = 0.05
+RADIUS = 0.01
+# MESH_SIZE = 0.003
+MESH_SIZE = 0.006
+NUM_CELL_X = NUM_CELL_Y = 5
 
-df.File('solutions_2d/domains_quart.pvd') << sub_domains
+KAPPA = 235.0
+K = 69.0e9
+ALPHA = 13.0e-6
+POWER = 90.0
+T_0 = 20.0
 
-'''
-4. Define PDE problem
-'''
+# The old boolean difference retained only the upper-right quadrant.
+# Generate that quadrant directly, subtracting its nine intersecting cells.
+CELL_COORDINATES = np.linspace(-0.08, 0.08, NUM_CELL_X)
+QUADRANT_CENTERS = np.array(
+    [(x, y) for y in CELL_COORDINATES for x in CELL_COORDINATES
+     if x >= 0.0 and y >= 0.0],
+    dtype=np.float64,
+)
 
-# PDE problem
+HEAT_FULL = 5
+HEAT_HALF = 6
+HEAT_QUARTER = 7
+RIGHT = 10
+TOP = 14
+MATERIAL = 20
+
+AREA_CYLINDER = 2.0 * np.pi * RADIUS * HIGHT
+q = fem.Constant if False else None  # Constants are created after the mesh.
+
+
+def make_mesh():
+    """Build the OCC geometry on rank zero; distribute it with DOLFINx."""
+    if comm.rank == 0:
+        gmsh.initialize()
+        gmsh.model.add("battery_pack_quadrant")
+        occ = gmsh.model.occ
+
+        rectangle = occ.addRectangle(0.0, 0.0, 0.0, LENGTH / 2, WIDTH / 2)
+        disks = [
+            (2, occ.addDisk(float(x), float(y), 0.0, RADIUS, RADIUS))
+            for x, y in QUADRANT_CENTERS
+        ]
+        material, _ = occ.cut([(2, rectangle)], disks)
+        occ.synchronize()
+
+        gmsh.model.addPhysicalGroup(
+            2, [tag for dim, tag in material], MATERIAL
+        )
+
+        curves = gmsh.model.getBoundary(
+            material, combined=True, oriented=False
+        )
+        boundary_groups = {
+            HEAT_FULL: [],
+            HEAT_HALF: [],
+            HEAT_QUARTER: [],
+            RIGHT: [],
+            TOP: [],
+        }
+
+        for dim, tag in curves:
+            if dim != 1:
+                continue
+
+            xmin, ymin, _, xmax, ymax, _ = gmsh.model.getBoundingBox(1, tag)
+            tol = 1.0e-5  # OCC bounding boxes have a small tolerance.
+
+            if abs(xmin - LENGTH / 2) < tol and abs(xmax - LENGTH / 2) < tol:
+                boundary_groups[RIGHT].append(tag)
+                continue
+            if abs(ymin - WIDTH / 2) < tol and abs(ymax - WIDTH / 2) < tol:
+                boundary_groups[TOP].append(tag)
+                continue
+
+            # Distinguish circular hole boundaries from the straight
+            # symmetry edges by the OCC curve's center of mass.
+            if abs(xmax - xmin) < tol or abs(ymax - ymin) < tol:
+                continue
+
+            cx, cy, _ = occ.getCenterOfMass(1, tag)
+            distances = np.linalg.norm(
+                QUADRANT_CENTERS - (cx, cy), axis=1
+            )
+            nearest = QUADRANT_CENTERS[np.argmin(distances)]
+            if np.min(distances) > RADIUS + tol:
+                raise RuntimeError(
+                    f"Cannot identify circular boundary curve {tag}."
+                )
+
+            zero_coordinates = np.count_nonzero(
+                np.isclose(nearest, 0.0)
+            )
+            marker = (
+                HEAT_QUARTER if zero_coordinates == 2 else
+                HEAT_HALF if zero_coordinates == 1 else HEAT_FULL
+            )
+            boundary_groups[marker].append(tag)
+
+        for marker, tags in boundary_groups.items():
+            if not tags:
+                raise RuntimeError(f"Empty Gmsh boundary group {marker}.")
+            gmsh.model.addPhysicalGroup(1, tags, marker)
+
+        gmsh.option.setNumber("Mesh.MeshSizeMin", MESH_SIZE)
+        gmsh.option.setNumber("Mesh.MeshSizeMax", MESH_SIZE)
+        gmsh.model.mesh.generate(2)
+
+    try:
+        # In DOLFINx 0.9 this returns (mesh, cell_tags, facet_tags).
+        msh, cell_tags, facet_tags = gmshio.model_to_mesh(
+            gmsh.model if comm.rank == 0 else None,
+            comm,
+            rank=0,
+            gdim=2,
+        )
+    finally:
+        if comm.rank == 0:
+            gmsh.finalize()
+
+    if facet_tags is None:
+        raise RuntimeError("Gmsh boundary physical groups were not imported.")
+    return msh, cell_tags, facet_tags
+
+
+mesh, cell_tags, facet_tags = make_mesh()
+facet_dim = mesh.topology.dim - 1
+dx = ufl.Measure("dx", domain=mesh)
+ds = ufl.Measure("ds", domain=mesh, subdomain_data=facet_tags)
+
+q = fem.Constant(mesh, PETSc.ScalarType(POWER / AREA_CYLINDER))
+f_r = fem.Constant(
+    mesh, np.array((-1.0e6 / HIGHT, 0.0), dtype=PETSc.ScalarType)
+)
+f_t = fem.Constant(
+    mesh, np.array((0.0, -1.0e6 / HIGHT), dtype=PETSc.ScalarType)
+)
+
 pde_problem = PDEProblem(mesh)
 
-'''
-4. 1. Add input to the PDE problem
-'''
-# name = 'density', function = density_function (function is the solution vector here)
-density_function_space = df.FunctionSpace(mesh, 'DG', 0)
-density_function = df.Function(density_function_space)
-pde_problem.add_input('density', density_function)
+density_space = fem.functionspace(mesh, ("Discontinuous Lagrange", 0))
+density = fem.Function(density_space)
+density.x.array[:] = 0.65
+density.x.scatter_forward()
+pde_problem.add_input("density", density)
 
-'''
-4. 2. Add states
-'''
-# Define mixed function space-split into temperature and displacement FS
-d = mesh.geometry().dim()
-cell = mesh.ufl_cell()
-displacement_fe = df.VectorElement("CG",cell,1)
-temperature_fe = df.FiniteElement("CG",cell,1)
+displacement_element = element(
+    "Lagrange", mesh.basix_cell(), 1,
+    shape=(mesh.geometry.dim,), dtype=np.float64
+)
+temperature_element = element(
+    "Lagrange", mesh.basix_cell(), 1, dtype=np.float64
+)
+mixed_space = fem.functionspace(
+    mesh, mixed_element([displacement_element, temperature_element])
+)
+mixed_state = fem.Function(mixed_space)
+u, T = ufl.split(mixed_state)
+v, T_hat = ufl.TestFunctions(mixed_space)
 
-mixed_fs = df.FunctionSpace(mesh, df.MixedElement([displacement_fe,temperature_fe]))
-mixed_fs.sub(1).dofmap().dofs()
-mixed_function = df.Function(mixed_fs)
-displacements_function,temperature_function = df.split(mixed_function)
+residual = get_residual_form(
+    u, v, density, T, T_hat, KAPPA, K, ALPHA
+)
+residual -= (
+    ufl.dot(f_r, v) * ds(RIGHT)
+    + ufl.dot(f_t, v) * ds(TOP)
+    + q * T_hat * (ds(HEAT_FULL) + ds(HEAT_HALF) + ds(HEAT_QUARTER))
+)
+pde_problem.add_state("mixed_states", mixed_state, residual, "density")
 
-v,T_hat = df.TestFunctions(mixed_fs)
+local_volume = fem.assemble_scalar(
+    fem.form(fem.Constant(mesh, PETSc.ScalarType(1.0)) * dx)
+)
+volume = comm.allreduce(local_volume, op=MPI.SUM)
 
-residual_form = get_residual_form(
-    displacements_function, 
-    v, 
-    density_function,
-    temperature_function,
-    T_hat,
-    KAPPA,
-    K,
-    ALPHA
+# RAMP interpolation: density is the filtered topology rho; C is
+# its dimensionless mechanical stiffness factor, not stiffness in Pa.
+C = density / (1.0 + 8.0 * (1.0 - density))
+pde_problem.add_scalar_output(
+    "avg_density", density / volume * dx, "density"
+)
+pde_problem.add_scalar_output(
+    "avg_density_p", C / volume * dx, "density"
+)
+pde_problem.add_scalar_output(
+    "compliance",
+    ufl.dot(f_r, u) * ds(RIGHT) + ufl.dot(f_t, u) * ds(TOP),
+    "mixed_states",
 )
 
-residual_form -=  (df.dot(f_r, v) * dss(10) + df.dot(f_t, v) * dss(14)  + \
-                    q*T_hat*dss(5) + q_half*T_hat*dss(6) + q_quart*T_hat*dss(7))
-print("get residual_form-------")
-pde_problem.add_state('mixed_states', mixed_function, residual_form, 'density')
+# Retain the stress convention of the original example.
+nu = 0.3
+E = K * C
+mu = E / (2.0 * (1.0 + nu))
+lambda_plane_stress = E * nu / (1.0 - nu**2)
+I = ufl.Identity(mesh.geometry.dim)
+strain = ufl.sym(ufl.grad(u)) - C * ALPHA * I * (T - T_0)
+sigma = lambda_plane_stress * ufl.div(u) * I + 2.0 * mu * strain
+deviator = sigma - ufl.tr(sigma) * I / 3.0
+von_mises = ufl.sqrt(
+    1.5 * ufl.inner(deviator / 1.0e3, deviator / 1.0e3)
+    + 1.0e-12
+)
+test_density = ufl.TestFunction(density_space)
+pde_problem.add_field_output(
+    "von_Mises",
+    von_mises * test_density / ufl.CellVolume(mesh) * dx,
+    "mixed_states",
+    "density",
+)
 
-'''
-4. 3. Add outputs
-'''
+# Roller/symmetry conditions and a temperature sink on x=0.1, y=0.1.
+vertical_facets = dmesh.locate_entities_boundary(
+    mesh, facet_dim, lambda x: np.isclose(x[0], 0.0)
+)
+horizontal_facets = dmesh.locate_entities_boundary(
+    mesh, facet_dim, lambda x: np.isclose(x[1], 0.0)
+)
+sink_facets = np.unique(np.concatenate((
+    facet_tags.find(RIGHT), facet_tags.find(TOP)
+))).astype(np.int32)
 
-# Add output-avg_density to the PDE problem:
-volume = df.assemble(df.Constant(1.) * df.dx(domain=mesh))
-avg_density_form = density_function / (df.Constant(1. * volume)) * df.dx(domain=mesh)
-pde_problem.add_scalar_output('avg_density', avg_density_form, 'density')
-print("Add output-avg_density-------")
-
-# Add output-compliance to the PDE problem:
-
-compliance_form = df.dot(f_r, displacements_function) * dss(10) +\
-                    df.dot(f_t, displacements_function) * dss(14) 
-pde_problem.add_scalar_output('compliance', compliance_form, 'mixed_states')
-print("Add output-compliance-------")
-
-compliance_form = df.dot(f_r, displacements_function) * dss(10) +\
-                    df.dot(f_t, displacements_function) * dss(14) 
-pde_problem.add_scalar_output('compliance', compliance_form, 'mixed_states')
-print("Add output-compliance-------")
-
-
-# Add output-compliance to the PDE problem:
-C = density_function/(1 + 8. * (1. - density_function))
-
-E = K * C # C is the design variable, its values is from 0 to 1
-
-nu = 0.3 # Poisson's ratio
-# Th = Th - df.Constant(20.)
-
-
-lambda_ = E * nu/(1. + nu)/(1 - 2 * nu)
-mu = E / 2 / (1 + nu) #lame's parameters
-
-lambda_ = 2*mu*lambda_/(lambda_+2*mu)
-# Th = df.Constant(7)
-I = df.Identity(len(displacements_function))
-
-w_ij = 0.5 * (df.grad(displacements_function) + df.grad(displacements_function).T) -\
-     C * ALPHA * I * (temperature_function-df.Constant(20.))
-sigm = lambda_*df.div(displacements_function)* I + 2*mu*w_ij 
-s = sigm - (1./3)*df.tr(sigm)*I 
-# von_Mises = df.tr(s)
-# von_Mises = df.tr(s)
-scalar_ = 1e3
-von_Mises = df.sqrt(3./2*df.inner(s/scalar_, s/scalar_) )
-von_Mises_form = (1/df.CellVolume(mesh)) * von_Mises * df.TestFunction(density_function_space) * df.dx
-pde_problem.add_field_output('von_Mises', von_Mises_form, 'mixed_states', 'density')
+for subspace, facets, value in (
+    (mixed_space.sub(0).sub(0), vertical_facets, 0.0),
+    (mixed_space.sub(0).sub(1), horizontal_facets, 0.0),
+    (mixed_space.sub(1), sink_facets, T_0),
+):
+    collapsed_space, _ = subspace.collapse()
+    bc_value = fem.Function(collapsed_space)
+    bc_value.x.array[:] = value
+    bc_value.x.scatter_forward()
+    dofs = fem.locate_dofs_topological(
+        (subspace, collapsed_space), facet_dim, facets
+    )
+    pde_problem.add_bc(fem.dirichletbc(bc_value, dofs, subspace))
 
 
-'''
-4. 3. Add bcs
-'''
+def global_temperature_parent_dofs():
+    """Map global collapsed-temperature DOFs to global mixed-state DOFs."""
+    temperature_space, local_parent_dofs = mixed_space.sub(1).collapse()
+    parent_map = mixed_space.dofmap.index_map
+    child_map = temperature_space.dofmap.index_map
+    if mixed_space.dofmap.index_map_bs != 1 or (
+        temperature_space.dofmap.index_map_bs != 1
+    ):
+        raise RuntimeError("Expected scalar-block mixed/temperature maps.")
 
-bc_displacements = df.DirichletBC(mixed_fs.sub(0).sub(0), df.Constant((0.0)), MidVBoundary())
-bc_displacements_1 = df.DirichletBC(mixed_fs.sub(0).sub(1), df.Constant((0.0)), MidHBoundary())
-
-bc_temperature = df.DirichletBC(mixed_fs.sub(1), df.Constant(T_0), SurroundingBoundary())
-
-# Add boundary conditions to the PDE problem:
-pde_problem.add_bc(bc_displacements)
-pde_problem.add_bc(bc_displacements_1)
-pde_problem.add_bc(bc_temperature)
-
-'''
-'''
-coords = density_function_space.tabulate_dof_coordinates()
-tree = spatial.cKDTree(coords)
-idx_list = []
-plt.figure(2)
-for i in [12, 13, 14 , 17, 18, 19, 22, 23, 24]:
-    idx = tree.query_ball_point(list(np.array([xv.flatten()[i], yv.flatten()[i]])), radius+2e-3)
-    idx_list.extend(idx)
-nearest_points = coords[idx_list]
-plt.gca().set_aspect('equal', adjustable='box')
-plt.plot(nearest_points[:,0],nearest_points[:,1],'bo')
+    nowned = child_map.size_local
+    child_globals = child_map.local_to_global(
+        np.arange(nowned, dtype=np.int32)
+    )
+    parent_globals = parent_map.local_to_global(
+        np.asarray(local_parent_dofs[:nowned], dtype=np.int32)
+    )
+    pairs = comm.allgather((child_globals, parent_globals))
+    result = np.full(child_map.size_global, -1, dtype=np.int64)
+    for child_ids, parent_ids in pairs:
+        result[child_ids] = parent_ids
+    if np.any(result < 0):
+        raise RuntimeError("Incomplete global temperature DOF map.")
+    return result
 
 
-# plt.figure(3)
-x = []
-y = []
-idx_rec = []
-x_line = y_line = np.linspace(0, 0.1, num=100)
-x_0 = y_0 = np.zeros(100)
-x_1 = y_1 = np.ones(100) * 0.1
-x.extend(x_1)
-x.extend(x_line)
+temperature_parent_dofs = global_temperature_parent_dofs()
 
-y.extend(y_line)
-y.extend(y_1)
-
-plt.gca().set_aspect('equal', adjustable='box')
-
-for i in range(len(x)):
-    idx = tree.query_ball_point(list(np.array([x[i], y[i]])), 2e-3)
-    idx_rec.extend(idx)
-nearest_points_rec = coords[idx_rec]
-plt.plot(nearest_points_rec[:,0],nearest_points_rec[:,1],'go')
-
-# plt.plot([x_line, x_1, x_line, x_0],[y_0, y_line, y_1, y_line],'bo')
-# plt.show()
-
-idx_list.extend(idx_rec)
-lower_bd = np.ones(coords[:,0].size)*1e-5
-idx_list_norepeat = []
-for i in idx_list:
-    if i not in idx_list_norepeat:
-        idx_list_norepeat.append(i)
-idx_array = np.asarray(idx_list_norepeat)
-lower_bd[idx_array] = 1.
+# The original example pins filtered density around all nine quadrant cells
+# and along the top/right outer perimeter.
+coordinates = density_space.tabulate_dof_coordinates()[:, :2]
+near_cells = cKDTree(QUADRANT_CENTERS).query(coordinates)[0] <= (
+    RADIUS + 0.002
+)
+near_perimeter = (
+    np.abs(coordinates[:, 0] - LENGTH / 2) <= 0.002
+) | (
+    np.abs(coordinates[:, 1] - WIDTH / 2) <= 0.002
+)
+owned_density = density_space.dofmap.index_map.size_local
+local_fixed = np.flatnonzero(
+    (near_cells | near_perimeter)[:owned_density]
+).astype(np.int32)
+global_fixed = density_space.dofmap.index_map.local_to_global(local_fixed)
+fixed_dofs = np.unique(np.concatenate(comm.allgather(global_fixed)))
 
 
-# Define the OpenMDAO problem and model
+def set_function_from_global(function, values):
+    """Assign owned DOLFINx DOFs from a replicated OpenMDAO vector."""
+    values = np.asarray(values).reshape(-1)
+    dofmap = function.function_space.dofmap
+    index_map = dofmap.index_map
+    bs = dofmap.index_map_bs
+    owned = index_map.size_local
+    global_blocks = index_map.local_to_global(
+        np.arange(owned, dtype=np.int32)
+    )
+    global_dofs = (
+        bs * global_blocks[:, None]
+        + np.arange(bs, dtype=np.int64)[None, :]
+    ).reshape(-1)
+    function.x.array[:owned * bs] = values[global_dofs]
+    function.x.scatter_forward()
+
+
+num_density = (
+    density_space.dofmap.index_map.size_global
+    * density_space.dofmap.index_map_bs
+)
+num_state = (
+    mixed_space.dofmap.index_map.size_global
+    * mixed_space.dofmap.index_map_bs
+)
 
 prob = om.Problem()
-
-num_dof_density = pde_problem.inputs_dict['density']['function'].function_space().dim()
-np.random.seed(0)
-comp = om.IndepVarComp()
-comp.add_output(
-    'density_unfiltered', 
-    shape=num_dof_density, 
-    val=np.ones(num_dof_density)*0.65,
-    # val=np.random.random(num_dof_density)*0.95,
+independent = om.IndepVarComp()
+independent.add_output(
+    "density_unfiltered", val=np.full(num_density, 0.65)
 )
-prob.model.add_subsystem('indep_var_comp', comp, promotes=['*'])
-
-print('indep_var_comp')
-
-comp = GeneralFilterComp(density_function_space=density_function_space)
-prob.model.add_subsystem('general_filter_comp', comp, promotes=['*'])
-print('general_filter_comp')
-
-
-group = AtomicsGroup(pde_problem=pde_problem)
-prob.model.add_subsystem('atomics_group', group, promotes=['*'])
-print('atomics_group')
-
-comp = ExtractComp(
-    in_name='mixed_states',
-    out_name='temperature_field',
-    in_shape=pde_problem.states_dict['mixed_states']['function'].function_space().dim(),
-    partial_dof=np.array(mixed_fs.sub(1).dofmap().dofs()),
+prob.model.add_subsystem("indep_var_comp", independent, promotes=["*"])
+prob.model.add_subsystem(
+    "general_filter_comp",
+    GeneralFilterComp(density_function_space=density_space),
+    promotes=["*"],
 )
-prob.model.add_subsystem('ExtractComp', comp, promotes=['*'])
-print('ExtractComp')
-
-comp = KSConstraintsComp(
-    in_name='temperature_field',
-    out_name='t_max',
-    shape=(np.array(mixed_fs.sub(1).dofmap().dofs()).size,),
-    axis=0,
-    # rho=50.,
-    rho=20,
+prob.model.add_subsystem(
+    "atomics_group",
+    AtomicsGroup(
+        pde_problem=pde_problem,
+        problem_type="linear_problem",
+        linear_solver_="fenics_direct",
+    ),
+    promotes=["*"],
 )
-prob.model.add_subsystem('KSConstraintsComp', comp, promotes=['*'])
-print('KSConstraintsComp')
-
-comp = KSConstraintsComp(
-    in_name='von_Mises',
-    out_name='von_Mises_max',
-    shape=(np.array(density_function_space.dofmap().dofs()).size,),
-    axis=0,
-    # rho=50.,
-    rho=20.,
+prob.model.add_subsystem(
+    "extract_comp",
+    ExtractComp(
+        in_name="mixed_states",
+        out_name="temperature_field",
+        in_shape=num_state,
+        partial_dof=temperature_parent_dofs,
+    ),
+    promotes=["*"],
 )
-prob.model.add_subsystem('KSConstraintsstress', comp, promotes=['*'])
+prob.model.add_subsystem(
+    "temperature_ks",
+    KSConstraintsComp(
+        in_name="temperature_field",
+        out_name="t_max",
+        shape=(temperature_parent_dofs.size,),
+        axis=0,
+        rho=20.0,
+    ),
+    promotes=["*"],
+)
+prob.model.add_subsystem(
+    "stress_ks",
+    KSConstraintsComp(
+        in_name="von_Mises",
+        out_name="von_Mises_max",
+        shape=(num_density,),
+        axis=0,
+        rho=20.0,
+    ),
+    promotes=["*"],
+)
 
-volume = df.assemble(df.Constant(1.) * df.dx(domain=mesh))
-avg_density_form_p = density_function/(1 + 8. * (1. - density_function)) / (df.Constant(1. * volume)) * df.dx(domain=mesh)
-pde_problem.add_scalar_output('avg_density_p', avg_density_form_p, 'density')
+prob.model.add_design_var("density_unfiltered", lower=1.0e-4, upper=1.0)
+prob.model.add_constraint(
+    "density", indices=fixed_dofs, lower=1.0, upper=1.0
+)
 
-prob.model.add_design_var('density_unfiltered',upper=1., lower=1e-4)
-
-
-
-
-if objective == 'mass':
-    prob.model.add_objective('avg_density')
-    prob.model.add_constraint('t_max', upper=50)
-    # prob.model.add_constraint('von_Mises_max',upper=1.e8/scalar_,scaler=1)
-    prob.model.add_constraint('density', upper=1.,lower=1.,
-                             indices=idx_array, linear=True)
+if objective == "mass":
+    prob.model.add_objective("avg_density")
+    prob.model.add_constraint("t_max", upper=50.0)
+elif objective == "compliance":
+    prob.model.add_objective("compliance")
+    # This is nonlinear: C(rho) is the RAMP interpolation.
+    prob.model.add_constraint("avg_density_p", upper=0.51)
+    prob.model.add_constraint("t_max", upper=55.0)
 else:
-    prob.model.add_objective('compliance')
-    prob.model.add_constraint('avg_density_p', upper=0.51, linear=True)
-    prob.model.add_constraint('t_max', upper=55)
-    prob.model.add_constraint('density',upper=1.,lower=1.,
-                                indices=idx_array, linear=True)
+    raise ValueError("objective must be 'mass' or 'compliance'")
 
-
-prob.driver = driver = om.pyOptSparseDriver()
-driver.options['optimizer'] = 'SNOPT'
-driver.opt_settings['Verify level'] = 0
-driver.opt_settings['Major iterations limit'] = 1500
-driver.opt_settings['Minor iterations limit'] = 1000000
-driver.opt_settings['Iterations limit'] = 100000000
-driver.opt_settings['Major step limit'] = 2.0
-driver.opt_settings['Major feasibility tolerance'] = 1.0e-5
-driver.opt_settings['Major optimality tolerance'] =5.e-9
+prob.driver = om.pyOptSparseDriver()
+prob.driver.options["optimizer"] = "IPOPT"
+prob.driver.opt_settings["max_iter"] = 500
+prob.driver.opt_settings["tol"] = 1.0e-6
+prob.driver.opt_settings["print_level"] = 5
+prob.driver.opt_settings["print_user_options"] = "yes"
 
 prob.setup()
+prob.run_driver()
 
-if False:
-    prob.run_model()
-    # prob.check_partials(compact_print=True)
-else:
-    # pass
-    prob.run_driver()
+set_function_from_global(density, prob.get_val("density"))
+set_function_from_global(mixed_state, prob.get_val("mixed_states"))
 
-displacements_function_val, temperature_function_val= mixed_function.split()
-'solutions/case_1/cantilever_beam/displacement.pvd'
-#save the solution vector
-df.File('solutions/case_2/battter_pack_{}/displacements.pvd'.format(objective)) << displacements_function_val
-df.File('solutions/case_2/battter_pack_{}/temperature.pvd'.format(objective)) << temperature_function_val
-df.File('solutions/case_2/battter_pack_{}/density.pvd'.format(objective)) << density_function
-stiffness  = df.project(density_function/(1 + 8. * (1. - density_function)), density_function_space) 
-df.File('solutions/case_2/battter_pack_{}/stiffness.pvd'.format(objective)) << stiffness
+displacements = mixed_state.sub(0).collapse()
+displacements.name = "displacements"
+temperature = mixed_state.sub(1).collapse()
+temperature.name = "temperature"
 
+stiffness = fem.Function(density_space)
+stiffness.name = "stiffness"
+stiffness.interpolate(
+    fem.Expression(C, density_space.element.interpolation_points())
+)
+stiffness.x.scatter_forward()
+
+stress = fem.Function(density_space)
+stress.name = "von_Mises"
+stress.interpolate(
+    fem.Expression(von_mises, density_space.element.interpolation_points())
+)
+stress.x.scatter_forward()
+
+output_dir = Path("solutions") / f"battery_pack_{objective}"
+if comm.rank == 0:
+    output_dir.mkdir(parents=True, exist_ok=True)
+comm.barrier()
+
+for filename, function in (
+    ("displacements.xdmf", displacements),
+    ("temperature.xdmf", temperature),
+    ("density.xdmf", density),
+    ("stiffness.xdmf", stiffness),
+    ("von_Mises.xdmf", stress),
+):
+    with io.XDMFFile(
+        comm, str(output_dir / filename), "w", encoding=io.XDMFFile.Encoding.ASCII
+    ) as writer:
+        writer.write_mesh(mesh)
+        writer.write_function(function, 0.0)
+
+# Preserve the unstructured cells and circular holes in the PNGs.
+# Restrict to owned cells to avoid drawing MPI partition ghosts twice.
+num_owned_cells = mesh.topology.index_map(mesh.topology.dim).size_local
+local_polygons = [
+    mesh.geometry.x[mesh.geometry.dofmap[cell], :2].copy()
+    for cell in range(num_owned_cells)
+]
+local_density = np.array(
+    [
+        density.x.array[density_space.dofmap.cell_dofs(cell)[0]]
+        for cell in range(num_owned_cells)
+    ],
+    dtype=np.float64,
+)
+local_stiffness = np.array(
+    [
+        stiffness.x.array[density_space.dofmap.cell_dofs(cell)[0]]
+        for cell in range(num_owned_cells)
+    ],
+    dtype=np.float64,
+)
+plot_data = comm.gather(
+    (local_polygons, local_density, local_stiffness),
+    root=0,
+)
+
+if comm.rank == 0:
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.collections import PolyCollection
+    from matplotlib.colors import LinearSegmentedColormap, Normalize
+
+    # Collect polygons and values from the top-right quadrant
+    quadrant_polygons = [
+        polygon
+        for rank_polygons, _, _ in plot_data
+        for polygon in rank_polygons
+    ]
+    density_values = np.concatenate([part[1] for part in plot_data])
+    stiffness_values = np.concatenate([part[2] for part in plot_data])
+
+    # Mirror the quadrant to create the full battery pack
+    # Top-right (original), top-left, bottom-left, bottom-right
+    def mirror_polygons(polygons, mirror_x=False, mirror_y=False):
+        """Mirror polygons across x and/or y axes."""
+        mirrored = []
+        for poly in polygons:
+            new_poly = poly.copy()
+            if mirror_x:
+                new_poly[:, 0] = -new_poly[:, 0]
+            if mirror_y:
+                new_poly[:, 1] = -new_poly[:, 1]
+            mirrored.append(new_poly)
+        return mirrored
+
+    # Create all four quadrants
+    polygons = []
+    full_density_values = []
+    full_stiffness_values = []
+
+    # Top-right quadrant (original)
+    polygons.extend(quadrant_polygons)
+    full_density_values.append(density_values)
+    full_stiffness_values.append(stiffness_values)
+
+    # Top-left quadrant (mirror across x)
+    polygons.extend(mirror_polygons(quadrant_polygons, mirror_x=True, mirror_y=False))
+    full_density_values.append(density_values)
+    full_stiffness_values.append(stiffness_values)
+
+    # Bottom-left quadrant (mirror across both x and y)
+    polygons.extend(mirror_polygons(quadrant_polygons, mirror_x=True, mirror_y=True))
+    full_density_values.append(density_values)
+    full_stiffness_values.append(stiffness_values)
+
+    # Bottom-right quadrant (mirror across y)
+    polygons.extend(mirror_polygons(quadrant_polygons, mirror_x=False, mirror_y=True))
+    full_density_values.append(density_values)
+    full_stiffness_values.append(stiffness_values)
+
+    # Concatenate all values
+    full_density_values = np.concatenate(full_density_values)
+    full_stiffness_values = np.concatenate(full_stiffness_values)
+
+    cmap = LinearSegmentedColormap.from_list(
+        "battery_stiffness",
+        [
+            (0.00, "#ffffff"),
+            (0.15, "#f5edeb"),
+            (0.50, "#d4a291"),
+            (1.00, "#861d26"),
+        ],
+    )
+
+    for filename, values, label in (
+        ("density.png", full_density_values, "filtered density ρ"),
+        (
+            "stiffness_factor.png",
+            full_stiffness_values,
+            "relative stiffness factor C(ρ)",
+        ),
+    ):
+        fig = plt.figure(figsize=(10, 10), facecolor="white")
+        ax = fig.add_axes([0.07, 0.25, 0.86, 0.72])
+        image = PolyCollection(
+            polygons,
+            array=values,
+            cmap=cmap,
+            norm=Normalize(vmin=0.0, vmax=1.0),
+            edgecolors="none",
+        )
+        ax.add_collection(image)
+        ax.set_xlim(-LENGTH / 2, LENGTH / 2)
+        ax.set_ylim(-WIDTH / 2, WIDTH / 2)
+        ax.set_aspect("equal")
+        ax.set_axis_off()
+
+        cax = fig.add_axes([0.20, 0.08, 0.60, 0.035])
+        cbar = fig.colorbar(image, cax=cax, orientation="horizontal")
+        cbar.set_ticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+        cbar.ax.xaxis.set_ticks_position("top")
+        cbar.ax.xaxis.set_label_position("top")
+        cbar.set_label(label, labelpad=8, fontsize=15)
+        cbar.outline.set_visible(False)
+        fig.savefig(output_dir / filename, dpi=180)
+        plt.close(fig)

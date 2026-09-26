@@ -1,0 +1,1052 @@
+Info    : [  0%] Difference                                                                                  
+Info    : [ 10%] Difference                                                                                  
+Info    : [ 20%] Difference                                                                                  
+Info    : [ 30%] Difference - Repeat intersection                                                                                
+Info    : [ 40%] Difference                                                                                  
+Info    : [ 50%] Difference                                                                                  
+Info    : [ 60%] Difference                                                                                  
+Info    : [ 70%] Difference - Filling splits of edges                                                                                
+Info    : [ 80%] Difference                                                                                  
+Info    : [ 90%] Difference                                                                                  
+Info    : Meshing 1D...
+Info    : [  0%] Meshing curve 9 (Ellipse)
+Info    : [ 10%] Meshing curve 10 (Ellipse)
+Info    : [ 20%] Meshing curve 12 (Ellipse)
+Info    : [ 20%] Meshing curve 13 (Ellipse)
+Info    : [ 30%] Meshing curve 14 (Ellipse)
+Info    : [ 30%] Meshing curve 15 (Line)
+Info    : [ 40%] Meshing curve 16 (Ellipse)
+Info    : [ 40%] Meshing curve 17 (Ellipse)
+Info    : [ 50%] Meshing curve 18 (Line)
+Info    : [ 50%] Meshing curve 19 (Ellipse)
+Info    : [ 60%] Meshing curve 20 (Ellipse)
+Info    : [ 60%] Meshing curve 21 (Line)
+Info    : [ 70%] Meshing curve 22 (Line)
+Info    : [ 70%] Meshing curve 23 (Line)
+Info    : [ 80%] Meshing curve 24 (Line)
+Info    : [ 80%] Meshing curve 25 (Ellipse)
+Info    : [ 90%] Meshing curve 26 (Line)
+Info    : [ 90%] Meshing curve 27 (Ellipse)
+Info    : [100%] Meshing curve 28 (Line)
+Info    : Done meshing 1D (Wall 0.000521334s, CPU 0.000745s)
+Info    : Meshing 2D...
+Info    : Meshing surface 1 (Plane, Frontal-Delaunay)
+Info    : Done meshing 2D (Wall 0.00549054s, CPU 0.008066s)
+Info    : 408 nodes 841 elements
+
+List of user-set options:
+
+                                    Name   Value                used
+                        file_print_level = 5                     yes
+                   hessian_approximation = limited-memory        yes
+                           linear_solver = mumps                 yes
+                                max_iter = 500                   yes
+                      nlp_scaling_method = user-scaling          yes
+                             output_file = /Users/alfiyandyhr/Github_Repos/atomics/atomics/examples/case_4_battery_pack_top_opt/run_battery_pack_top_opt_out/IPOPT.out  yes
+                             print_level = 5                     yes
+                      print_user_options = yes                   yes
+                                      sb = yes                   yes
+                                     tol = 1e-06                 yes
+This is Ipopt version 3.14.19, running with linear solver MUMPS 5.7.3.
+
+Number of nonzeros in equality constraint Jacobian...:    73185
+Number of nonzeros in inequality constraint Jacobian.:     1394
+Number of nonzeros in Lagrangian Hessian.............:        0
+
+Total number of variables............................:      697
+                     variables with only lower bounds:        0
+                variables with lower and upper bounds:      697
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:      105
+Total number of inequality constraints...............:        2
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:        2
+
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+   0  7.3788079e+02 8.19e+01 6.04e+00   0.0 0.00e+00    -  0.00e+00 0.00e+00   0
+   1  4.8566357e+02 4.61e+01 3.43e+00   0.5 3.70e+00    -  3.90e-01 4.62e-01h  1
+   2  2.8816447e+02 1.43e+01 2.78e+00  -0.3 1.46e+01    -  7.90e-01 5.78e-01h  1
+   3  2.0639335e+02 1.08e+00 3.19e+00  -0.9 2.38e+00    -  8.48e-01 5.16e-01f  1
+   4  2.0608069e+02 1.04e+00 9.44e+02  -0.4 7.20e+00    -  7.05e-01 8.39e-03h  1
+   5  2.2026114e+02 3.35e+00 2.51e+03  -0.1 2.30e+01    -  1.00e+00 2.56e-01h  1
+   6  2.2774268e+02 4.67e+00 1.48e+04   0.4 2.24e+01    -  1.00e+00 1.03e-01h  1
+   7  2.3487572e+02 5.99e+00 1.20e+05   1.1 1.82e+01    -  1.00e+00 1.37e-01h  1
+   8  2.3825335e+02 6.64e+00 1.64e+06   1.9 1.65e+01    -  1.00e+00 6.98e-02h  1
+   9  2.3827963e+02 6.64e+00 2.33e+06  -4.1 8.83e+00    -  2.68e-02 1.46e-03h  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  10  2.3819743e+02 6.56e+00 2.92e+06   2.7 5.95e+01    -  2.62e-02 1.23e-02h  1
+  11  2.3769825e+02 6.41e+00 2.22e+06   2.7 8.60e+00    -  1.67e-02 2.33e-02h  1
+  12  2.3698371e+02 6.26e+00 8.57e+05   2.7 3.31e+01    -  1.26e-02 2.14e-02h  1
+  13  2.3672371e+02 6.22e+00 5.22e+06   2.7 4.65e+01    -  2.13e-02 6.91e-03h  1
+  14  2.3642311e+02 6.17e+00 6.50e+06   2.7 3.91e+01    -  9.96e-03 7.76e-03h  1
+  15  2.3592537e+02 6.10e+00 1.08e+07   2.7 6.14e+01    -  1.39e-02 9.86e-03h  1
+  16  2.3570529e+02 6.07e+00 2.22e+07   2.7 6.62e+01    -  8.31e-03 4.92e-03h  1
+  17  2.3550812e+02 6.05e+00 4.55e+07   2.7 1.12e+02    -  5.07e-03 2.74e-03h  1
+  18  2.3545292e+02 6.04e+00 9.56e+07   2.7 7.22e+01    -  3.09e-03 1.48e-03h  1
+  19  2.3533944e+02 6.03e+00 2.17e+08   2.7 1.69e+02    -  3.23e-03 1.88e-03h  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  20  2.3536199e+02 6.03e+00 5.44e+08  -4.0 3.08e+02    -  6.72e-04 3.34e-04h  1
+  21  2.3533063e+02 6.03e+00 3.08e+09   2.7 6.22e+02    -  5.65e-04 1.52e-04h  1
+  22  2.3535392e+02 6.03e+00 5.77e+09  -4.1 2.92e+03    -  6.22e-05 3.68e-05h  1
+  23  2.3535145e+02 6.03e+00 3.04e+10  -4.1 8.79e+03    -  5.05e-05 1.49e-05h  1
+  24  2.3532947e+02 6.03e+00 3.71e+10   2.7 1.57e+04    -  1.39e-05 7.63e-06h  1
+  25  2.3536598e+02 6.03e+00 5.59e+10   2.7 1.11e+04    -  2.29e-05 1.41e-05h  1
+  26  2.3534168e+02 6.03e+00 8.20e+10   2.7 7.42e+03    -  2.49e-05 1.86e-05h  1
+  27  2.3533149e+02 6.03e+00 4.37e+11   2.7 2.24e+04    -  1.78e-05 3.65e-06h  1
+  28  2.3538618e+02 6.03e+00 4.03e+11   2.7 1.88e+04    -  1.00e-05 1.11e-05h  1
+  29  2.3535748e+02 6.03e+00 2.79e+10   2.7 5.14e+03    -  4.19e-07 2.04e-05h  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  30  2.3533300e+02 6.03e+00 1.12e+11   2.7 2.33e+04    -  7.54e-06 6.12e-06h  1
+  31  2.3533751e+02 6.03e+00 1.12e+11   2.7 1.25e+04    -  2.64e-06 2.64e-06s  4
+  32  2.3534677e+02 6.03e+00 1.12e+11   2.7 2.20e+04    -  2.47e-06 2.47e-06s  4
+  33r 2.3534677e+02 6.03e+00 1.00e+03   2.7 0.00e+00    -  0.00e+00 9.95e-08R  2
+  34r 2.3569950e+02 6.08e+00 1.03e+03   1.6 2.70e+01    -  4.97e-01 8.32e-03f  1
+  35r 2.7476372e+02 1.10e+01 9.02e+02   2.4 4.98e+01    -  4.90e-01 9.94e-02f  1
+  36r 3.0652549e+02 1.38e+01 6.70e+02   2.0 1.11e+01    -  5.29e-01 2.66e-01f  1
+  37r 3.0637110e+02 1.13e+01 4.05e+02   1.9 5.18e+00    -  9.81e-01 4.49e-01f  1
+  38r 2.3378550e+02 3.81e-01 2.42e+02   1.5 1.40e+01    -  1.00e+00 8.44e-01f  1
+  39  1.9573514e+02 9.42e-02 1.05e+07  -6.3 1.00e+01    -  3.47e-03 4.05e-01f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  40  1.9543692e+02 9.45e-02 1.05e+07  -0.6 5.77e+00    -  1.00e+00 5.46e-03h  1
+  41  2.0024542e+02 8.48e-02 8.55e+06   0.3 9.57e+00    -  1.00e+00 1.88e-01h  1
+  42  2.0721195e+02 7.77e-02 7.37e+06   0.9 1.13e+01    -  1.00e+00 1.38e-01h  1
+  43  2.1128141e+02 7.42e-02 6.97e+06   1.8 1.42e+01    -  1.00e+00 5.30e-02h  1
+  44  2.1243062e+02 7.24e-02 6.71e+06   2.7 4.92e+00    -  9.59e-02 3.78e-02h  1
+  45  2.1445647e+02 6.87e-02 6.31e+06   2.7 5.81e+00    -  2.64e-01 5.83e-02h  1
+  46  2.1566741e+02 6.51e-02 5.88e+06   2.7 4.43e+00    -  1.16e-01 6.69e-02h  1
+  47  2.1580113e+02 6.27e-02 5.61e+06   2.7 6.80e+00    -  7.61e-02 4.48e-02h  1
+  48  2.1640286e+02 6.15e-02 5.45e+06   2.7 1.65e+01    -  3.30e-02 2.60e-02h  1
+  49  2.1614076e+02 6.08e-02 1.49e+07   2.7 1.35e+01    -  3.94e-02 1.33e-02h  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  50  2.1585843e+02 6.00e-02 2.11e+07   2.7 1.72e+01    -  2.32e-02 1.62e-02h  1
+  51  2.1530013e+02 5.95e-02 2.80e+07   2.7 3.09e+01    -  1.38e-02 1.07e-02h  1
+  52  2.1535665e+02 5.93e-02 5.47e+07   2.7 3.09e+01    -  7.61e-03 3.15e-03h  1
+  53  2.1546122e+02 5.91e-02 1.16e+08   2.7 3.52e+01    -  7.86e-03 2.80e-03h  1
+  54  2.1555157e+02 5.90e-02 1.41e+08   2.7 6.40e+01    -  3.45e-03 2.42e-03h  1
+  55  2.1560492e+02 5.89e-02 1.89e+08   2.7 9.39e+01    -  3.24e-03 2.12e-03h  1
+  56  2.1568130e+02 5.88e-02 2.63e+08   2.7 9.43e+01    -  2.73e-03 1.89e-03h  1
+  57  2.1568379e+02 5.87e-02 1.02e+08  -3.5 5.48e+01    -  6.39e-04 1.38e-03h  1
+  58  2.1568858e+02 5.87e-02 2.38e+08   2.7 1.44e+02    -  6.05e-04 3.03e-04h  1
+  59  2.1569784e+02 5.87e-02 1.10e+09   2.7 1.77e+02    -  1.63e-03 4.03e-04h  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  60  2.1572138e+02 5.87e-02 1.03e+09   2.7 2.16e+02    -  6.23e-04 6.59e-04h  1
+  61  2.1576074e+02 5.87e-02 4.19e+08  -3.5 1.44e+02    -  2.05e-04 3.16e-04h  1
+  62  2.1577052e+02 5.86e-02 2.77e+09  -3.6 1.08e+02    -  2.48e-04 1.07e-04h  1
+  63  2.1575245e+02 5.86e-02 6.44e+07   2.7 5.18e+02    -  4.31e-05 1.04e-04h  1
+  64  2.1577911e+02 5.86e-02 2.46e+09  -3.7 2.71e+02    -  8.20e-05 6.11e-05h  1
+  65  2.1579687e+02 5.86e-02 6.92e+10   2.7 9.42e+02    -  1.14e-04 2.09e-05h  1
+  66r 2.1579687e+02 5.86e-02 1.00e+03   2.7 0.00e+00    -  0.00e+00 3.08e-07R  6
+  67r 2.1729054e+02 1.08e-01 4.41e+01   0.2 6.67e-01    -  9.69e-01 8.51e-01f  1
+  68  2.1697652e+02 7.36e-02 1.38e+04  -0.4 3.42e+00    -  4.30e-04 9.81e-03h  1
+  69  2.1697774e+02 7.48e-02 1.38e+04  -0.4 1.08e+01    -  2.08e-02 1.68e-04f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  70  2.1707147e+02 1.08e-01 1.37e+04  -0.4 2.78e+01    -  6.65e-03 2.12e-03f  1
+  71  2.1706977e+02 1.08e-01 1.37e+04  -0.4 7.01e+00    -  5.86e-03 3.02e-04h  1
+  72  2.1702177e+02 1.07e-01 1.36e+04  -0.4 1.10e+01    -  1.17e-02 3.61e-03h  1
+  73  2.1701750e+02 1.07e-01 1.36e+04  -0.4 1.96e+01    -  5.99e-04 2.30e-03h  1
+  74  2.1699369e+02 1.07e-01 1.36e+04  -0.4 5.29e+01    -  1.03e-03 9.10e-04h  1
+  75  2.1699244e+02 1.07e-01 1.36e+04  -0.4 9.66e+01    -  1.77e-04 2.19e-04h  1
+  76  2.1699525e+02 1.07e-01 9.85e+04  -0.4 1.88e+02    -  7.35e-04 2.61e-04h  1
+  77  2.1690426e+02 1.07e-01 6.78e+04  -0.4 1.09e+03    -  1.35e-05 8.72e-05h  1
+  78  2.1693082e+02 1.06e-01 4.31e+05  -0.4 9.43e+02    -  9.54e-05 2.81e-05h  1
+  79  2.1696457e+02 1.06e-01 8.63e+05  -0.4 3.39e+03    -  4.58e-05 2.77e-05h  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  80  2.1697327e+02 1.06e-01 2.49e+06  -0.4 5.83e+02    -  3.19e-04 1.32e-04h  1
+  81  2.1692575e+02 1.06e-01 2.15e+06  -0.4 1.63e+03    -  1.52e-05 4.54e-05h  1
+  82  2.1692536e+02 1.06e-01 2.24e+06  -0.4 2.72e+03    -  1.27e-05 1.14e-05h  1
+  83  2.1693194e+02 1.06e-01 1.21e+07  -0.4 2.27e+03    -  4.59e-05 1.17e-05h  1
+  84r 2.1693194e+02 1.06e-01 1.00e+03  -0.4 0.00e+00    -  0.00e+00 3.29e-07R  3
+  85r 2.1464350e+02 6.23e-02 1.00e+03  -0.3 2.97e+01    -  2.92e-02 3.53e-03f  1
+  86  2.1464318e+02 6.23e-02 5.35e+00  -6.3 1.41e+00    -  8.51e-05 1.58e-05h  1
+  87r 2.1464318e+02 6.23e-02 9.99e+02  -1.2 0.00e+00    -  0.00e+00 1.28e-07R  2
+  88r 2.0920823e+02 8.36e-02 9.95e+02   0.0 1.02e+02    -  1.73e-02 4.52e-03f  1
+  89r 2.1101687e+02 7.85e-02 9.88e+02   0.8 8.43e+01    -  3.16e-02 5.38e-03f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  90r 2.0707256e+02 8.95e-02 9.63e+02  -0.3 5.55e+00    -  3.63e-02 2.58e-02f  1
+  91r 1.9672223e+02 1.19e-01 8.89e+02  -0.3 8.06e+00    -  8.30e-03 8.58e-02f  1
+  92r 1.9607352e+02 1.16e-01 8.32e+02   0.5 1.04e+01    -  3.48e-01 8.10e-02f  1
+  93r 1.8361941e+02 1.65e-01 4.90e+02   0.1 3.16e+00    -  1.89e-01 4.47e-01f  1
+  94r 1.7121305e+02 2.01e-01 2.84e+02   0.1 3.93e+00    -  1.00e+00 6.48e-01f  1
+  95r 1.6403649e+02 2.32e-01 9.19e-01  -0.3 1.18e+00    -  1.00e+00 1.00e+00f  1
+  96r 1.6168266e+02 2.54e-01 3.16e+00  -1.2 3.86e-01    -  8.46e-01 1.00e+00f  1
+  97r 1.6539236e+02 2.50e-01 5.02e+00  -1.4 6.36e-01    -  9.86e-01 8.75e-01f  1
+  98r 1.6588390e+02 2.51e-01 5.93e+00  -2.2 3.28e-01    -  1.00e+00 7.81e-01f  1
+  99r 1.6587814e+02 2.52e-01 6.30e+00  -2.5 2.85e-01    -  1.00e+00 7.93e-01f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+ 100r 1.6583826e+02 2.52e-01 6.37e-02  -3.4 7.63e-02    -  1.00e+00 1.00e+00f  1
+ 101r 1.6581772e+02 2.53e-01 7.87e-02  -4.5 3.74e-02    -  1.00e+00 9.93e-01f  1
+ 102r 1.6580288e+02 2.53e-01 2.69e-01  -5.8 1.60e-02    -  1.00e+00 9.82e-01f  1
+ 103r 1.6580063e+02 2.53e-01 2.70e-04  -5.9 2.24e-03    -  1.00e+00 9.97e-01h  1
+ 104r 1.6580061e+02 2.53e-01 4.96e-04  -6.5 6.97e-05    -  1.00e+00 4.46e-01h  1
+ 105r 1.6580058e+02 2.53e-01 1.12e-04  -6.3 3.36e-05    -  1.00e+00 1.00e+00f  1
+ 106r 1.6580059e+02 2.53e-01 1.91e-04  -6.6 8.40e-06    -  1.00e+00 1.00e+00f  1
+ 107r 1.6580059e+02 2.53e-01 7.06e-05  -6.7 2.34e-06    -  1.00e+00 1.00e+00f  1
+ 108r 1.6580059e+02 2.53e-01 1.12e-04  -6.9 2.98e-06    -  1.00e+00 1.00e+00f  1
+ 109r 1.6580060e+02 2.53e-01 9.37e-05  -7.2 1.56e-06    -  1.00e+00 1.00e+00f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+ 110r 1.6580060e+02 2.53e-01 8.05e-05  -7.6 6.21e-07    -  1.00e+00 1.00e+00f  1
+ 111r 1.6580060e+02 2.53e-01 5.45e-05  -7.9 3.27e-07    -  1.00e+00 1.00e+00f  1
+ 112r 1.6580061e+02 2.53e-01 4.23e-05  -8.3 1.65e-07    -  1.00e+00 1.00e+00f  1
+ 113r 1.6580061e+02 2.53e-01 2.97e-05  -8.8 7.66e-08    -  1.00e+00 9.60e-01f  1
+ 114r 1.6580061e+02 2.53e-01 8.44e-06  -9.0 6.29e-08    -  1.00e+00 1.00e+00f  1
+
+Number of Iterations....: 114
+
+                                   (scaled)                 (unscaled)
+Objective...............:   1.6580060631946844e+02    1.6580060631946844e+02
+Dual infeasibility......:   3.8996283429088123e+00    3.8996283429088123e+00
+Constraint violation....:   2.5258081635359575e-01    2.5258081635359575e-01
+Variable bound violation:   9.9941239728451592e-09    9.9941239728451592e-09
+Complementarity.........:   1.0408809613479700e-09    1.0408809613479700e-09
+Overall NLP error.......:   3.8996283429088123e+00    3.8996283429088123e+00
+
+
+Number of objective function evaluations             = 135
+Number of objective gradient evaluations             = 85
+Number of equality constraint evaluations            = 135
+Number of inequality constraint evaluations          = 135
+Number of equality constraint Jacobian evaluations   = 120
+Number of inequality constraint Jacobian evaluations = 120
+Number of Lagrangian Hessian evaluations             = 0
+Total seconds in IPOPT                               = 22.228
+
+EXIT: Converged to a point of local infeasibility. Problem may be infeasible.
+
+
+Optimization Problem -- Optimization using pyOpt_sparse
+================================================================================
+    Objective Function: _objfunc
+
+    Solution: 
+--------------------------------------------------------------------------------
+    Total Time:                   22.2295
+       User Objective Time :       1.3532
+       User Sensitivity Time :     4.3485
+       Interface Time :            0.1681
+       Opt Solver Time:           16.3597
+    Calls to Objective Function :     133
+    Calls to Sens Function :          120
+
+
+   Objectives
+      Index  Name                  Value
+          0  compliance     1.658006E+02
+
+   Variables (c - continuous, i - integer, d - discrete)
+      Index  Name                     Type      Lower Bound            Value      Upper Bound     Status
+          0  density_unfiltered_0        c     1.000000E-04     1.000000E+00     1.000000E+00          u
+          1  density_unfiltered_1        c     1.000000E-04     1.000000E+00     1.000000E+00          u
+          2  density_unfiltered_2        c     1.000000E-04     1.000000E+00     1.000000E+00          u
+          3  density_unfiltered_3        c     1.000000E-04     1.000000E+00     1.000000E+00          u
+          4  density_unfiltered_4        c     1.000000E-04     1.000000E+00     1.000000E+00          u
+          5  density_unfiltered_5        c     1.000000E-04     1.000000E+00     1.000000E+00          u
+          6  density_unfiltered_6        c     1.000000E-04     1.000000E+00     1.000000E+00          u
+          7  density_unfiltered_7        c     1.000000E-04     1.000000E+00     1.000000E+00          u
+          8  density_unfiltered_8        c     1.000000E-04     1.000000E+00     1.000000E+00          u
+          9  density_unfiltered_9        c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         10  density_unfiltered_10       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         11  density_unfiltered_11       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         12  density_unfiltered_12       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         13  density_unfiltered_13       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         14  density_unfiltered_14       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         15  density_unfiltered_15       c     1.000000E-04     9.999999E-01     1.000000E+00          u
+         16  density_unfiltered_16       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         17  density_unfiltered_17       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         18  density_unfiltered_18       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         19  density_unfiltered_19       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         20  density_unfiltered_20       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         21  density_unfiltered_21       c     1.000000E-04     9.999981E-01     1.000000E+00           
+         22  density_unfiltered_22       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         23  density_unfiltered_23       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         24  density_unfiltered_24       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         25  density_unfiltered_25       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         26  density_unfiltered_26       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         27  density_unfiltered_27       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         28  density_unfiltered_28       c     1.000000E-04     9.999989E-01     1.000000E+00           
+         29  density_unfiltered_29       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         30  density_unfiltered_30       c     1.000000E-04     9.999035E-05     1.000000E+00          l
+         31  density_unfiltered_31       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         32  density_unfiltered_32       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         33  density_unfiltered_33       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         34  density_unfiltered_34       c     1.000000E-04     9.999997E-01     1.000000E+00          u
+         35  density_unfiltered_35       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         36  density_unfiltered_36       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         37  density_unfiltered_37       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         38  density_unfiltered_38       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         39  density_unfiltered_39       c     1.000000E-04     9.999063E-05     1.000000E+00          l
+         40  density_unfiltered_40       c     1.000000E-04     9.999078E-05     1.000000E+00          l
+         41  density_unfiltered_41       c     1.000000E-04     9.999070E-05     1.000000E+00          l
+         42  density_unfiltered_42       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         43  density_unfiltered_43       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         44  density_unfiltered_44       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         45  density_unfiltered_45       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         46  density_unfiltered_46       c     1.000000E-04     9.999998E-01     1.000000E+00          u
+         47  density_unfiltered_47       c     1.000000E-04     9.999607E-05     1.000000E+00          l
+         48  density_unfiltered_48       c     1.000000E-04     9.999093E-05     1.000000E+00          l
+         49  density_unfiltered_49       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         50  density_unfiltered_50       c     1.000000E-04     9.999119E-05     1.000000E+00          l
+         51  density_unfiltered_51       c     1.000000E-04     9.999077E-05     1.000000E+00          l
+         52  density_unfiltered_52       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         53  density_unfiltered_53       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         54  density_unfiltered_54       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         55  density_unfiltered_55       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         56  density_unfiltered_56       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         57  density_unfiltered_57       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         58  density_unfiltered_58       c     1.000000E-04     9.999068E-05     1.000000E+00          l
+         59  density_unfiltered_59       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         60  density_unfiltered_60       c     1.000000E-04     9.999124E-05     1.000000E+00          l
+         61  density_unfiltered_61       c     1.000000E-04     9.999104E-05     1.000000E+00          l
+         62  density_unfiltered_62       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         63  density_unfiltered_63       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         64  density_unfiltered_64       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         65  density_unfiltered_65       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         66  density_unfiltered_66       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         67  density_unfiltered_67       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         68  density_unfiltered_68       c     1.000000E-04     9.999985E-01     1.000000E+00           
+         69  density_unfiltered_69       c     1.000000E-04     9.999079E-05     1.000000E+00          l
+         70  density_unfiltered_70       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         71  density_unfiltered_71       c     1.000000E-04     9.999061E-05     1.000000E+00          l
+         72  density_unfiltered_72       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         73  density_unfiltered_73       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         74  density_unfiltered_74       c     1.000000E-04     9.999997E-01     1.000000E+00          u
+         75  density_unfiltered_75       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         76  density_unfiltered_76       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         77  density_unfiltered_77       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         78  density_unfiltered_78       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         79  density_unfiltered_79       c     1.000000E-04     9.999205E-05     1.000000E+00          l
+         80  density_unfiltered_80       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         81  density_unfiltered_81       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         82  density_unfiltered_82       c     1.000000E-04     9.999038E-05     1.000000E+00          l
+         83  density_unfiltered_83       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         84  density_unfiltered_84       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         85  density_unfiltered_85       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         86  density_unfiltered_86       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         87  density_unfiltered_87       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         88  density_unfiltered_88       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         89  density_unfiltered_89       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         90  density_unfiltered_90       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         91  density_unfiltered_91       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         92  density_unfiltered_92       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         93  density_unfiltered_93       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         94  density_unfiltered_94       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         95  density_unfiltered_95       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         96  density_unfiltered_96       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         97  density_unfiltered_97       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         98  density_unfiltered_98       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+         99  density_unfiltered_99       c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        100  density_unfiltered_100      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        101  density_unfiltered_101      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        102  density_unfiltered_102      c     1.000000E-04     9.999994E-01     1.000000E+00          u
+        103  density_unfiltered_103      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        104  density_unfiltered_104      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        105  density_unfiltered_105      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        106  density_unfiltered_106      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        107  density_unfiltered_107      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        108  density_unfiltered_108      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        109  density_unfiltered_109      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        110  density_unfiltered_110      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        111  density_unfiltered_111      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        112  density_unfiltered_112      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        113  density_unfiltered_113      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        114  density_unfiltered_114      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        115  density_unfiltered_115      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        116  density_unfiltered_116      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        117  density_unfiltered_117      c     1.000000E-04     9.999999E-01     1.000000E+00          u
+        118  density_unfiltered_118      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        119  density_unfiltered_119      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        120  density_unfiltered_120      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        121  density_unfiltered_121      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        122  density_unfiltered_122      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        123  density_unfiltered_123      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        124  density_unfiltered_124      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        125  density_unfiltered_125      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        126  density_unfiltered_126      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        127  density_unfiltered_127      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        128  density_unfiltered_128      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        129  density_unfiltered_129      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        130  density_unfiltered_130      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        131  density_unfiltered_131      c     1.000000E-04     9.999996E-01     1.000000E+00          u
+        132  density_unfiltered_132      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        133  density_unfiltered_133      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        134  density_unfiltered_134      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        135  density_unfiltered_135      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        136  density_unfiltered_136      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        137  density_unfiltered_137      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        138  density_unfiltered_138      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        139  density_unfiltered_139      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        140  density_unfiltered_140      c     1.000000E-04     9.999996E-01     1.000000E+00          u
+        141  density_unfiltered_141      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        142  density_unfiltered_142      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        143  density_unfiltered_143      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        144  density_unfiltered_144      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        145  density_unfiltered_145      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        146  density_unfiltered_146      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        147  density_unfiltered_147      c     1.000000E-04     9.999995E-01     1.000000E+00          u
+        148  density_unfiltered_148      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        149  density_unfiltered_149      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        150  density_unfiltered_150      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        151  density_unfiltered_151      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        152  density_unfiltered_152      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        153  density_unfiltered_153      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        154  density_unfiltered_154      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        155  density_unfiltered_155      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        156  density_unfiltered_156      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        157  density_unfiltered_157      c     1.000000E-04     9.999999E-01     1.000000E+00          u
+        158  density_unfiltered_158      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        159  density_unfiltered_159      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        160  density_unfiltered_160      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        161  density_unfiltered_161      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        162  density_unfiltered_162      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        163  density_unfiltered_163      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        164  density_unfiltered_164      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        165  density_unfiltered_165      c     1.000000E-04     9.999028E-05     1.000000E+00          l
+        166  density_unfiltered_166      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        167  density_unfiltered_167      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        168  density_unfiltered_168      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        169  density_unfiltered_169      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        170  density_unfiltered_170      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        171  density_unfiltered_171      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        172  density_unfiltered_172      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        173  density_unfiltered_173      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        174  density_unfiltered_174      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        175  density_unfiltered_175      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        176  density_unfiltered_176      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        177  density_unfiltered_177      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        178  density_unfiltered_178      c     1.000000E-04     9.999980E-01     1.000000E+00           
+        179  density_unfiltered_179      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        180  density_unfiltered_180      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        181  density_unfiltered_181      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        182  density_unfiltered_182      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        183  density_unfiltered_183      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        184  density_unfiltered_184      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        185  density_unfiltered_185      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        186  density_unfiltered_186      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        187  density_unfiltered_187      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        188  density_unfiltered_188      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        189  density_unfiltered_189      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        190  density_unfiltered_190      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        191  density_unfiltered_191      c     1.000000E-04     9.999992E-01     1.000000E+00          u
+        192  density_unfiltered_192      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        193  density_unfiltered_193      c     1.000000E-04     9.999068E-05     1.000000E+00          l
+        194  density_unfiltered_194      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        195  density_unfiltered_195      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        196  density_unfiltered_196      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        197  density_unfiltered_197      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        198  density_unfiltered_198      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        199  density_unfiltered_199      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        200  density_unfiltered_200      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        201  density_unfiltered_201      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        202  density_unfiltered_202      c     1.000000E-04     9.999038E-05     1.000000E+00          l
+        203  density_unfiltered_203      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        204  density_unfiltered_204      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        205  density_unfiltered_205      c     1.000000E-04     9.999067E-05     1.000000E+00          l
+        206  density_unfiltered_206      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        207  density_unfiltered_207      c     1.000000E-04     9.999075E-05     1.000000E+00          l
+        208  density_unfiltered_208      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        209  density_unfiltered_209      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        210  density_unfiltered_210      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        211  density_unfiltered_211      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        212  density_unfiltered_212      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        213  density_unfiltered_213      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        214  density_unfiltered_214      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        215  density_unfiltered_215      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        216  density_unfiltered_216      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        217  density_unfiltered_217      c     1.000000E-04     9.999071E-05     1.000000E+00          l
+        218  density_unfiltered_218      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        219  density_unfiltered_219      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        220  density_unfiltered_220      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        221  density_unfiltered_221      c     1.000000E-04     9.999094E-05     1.000000E+00          l
+        222  density_unfiltered_222      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        223  density_unfiltered_223      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        224  density_unfiltered_224      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        225  density_unfiltered_225      c     1.000000E-04     9.999035E-05     1.000000E+00          l
+        226  density_unfiltered_226      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        227  density_unfiltered_227      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        228  density_unfiltered_228      c     1.000000E-04     9.999048E-05     1.000000E+00          l
+        229  density_unfiltered_229      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        230  density_unfiltered_230      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        231  density_unfiltered_231      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        232  density_unfiltered_232      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        233  density_unfiltered_233      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        234  density_unfiltered_234      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        235  density_unfiltered_235      c     1.000000E-04     9.999099E-05     1.000000E+00          l
+        236  density_unfiltered_236      c     1.000000E-04     9.999963E-01     1.000000E+00           
+        237  density_unfiltered_237      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        238  density_unfiltered_238      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        239  density_unfiltered_239      c     1.000000E-04     9.999058E-05     1.000000E+00          l
+        240  density_unfiltered_240      c     1.000000E-04     9.999998E-01     1.000000E+00          u
+        241  density_unfiltered_241      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        242  density_unfiltered_242      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        243  density_unfiltered_243      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        244  density_unfiltered_244      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        245  density_unfiltered_245      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        246  density_unfiltered_246      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        247  density_unfiltered_247      c     1.000000E-04     9.999081E-05     1.000000E+00          l
+        248  density_unfiltered_248      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        249  density_unfiltered_249      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        250  density_unfiltered_250      c     1.000000E-04     9.999131E-05     1.000000E+00          l
+        251  density_unfiltered_251      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        252  density_unfiltered_252      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        253  density_unfiltered_253      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        254  density_unfiltered_254      c     1.000000E-04     9.999057E-05     1.000000E+00          l
+        255  density_unfiltered_255      c     1.000000E-04     9.999071E-05     1.000000E+00          l
+        256  density_unfiltered_256      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        257  density_unfiltered_257      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        258  density_unfiltered_258      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        259  density_unfiltered_259      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        260  density_unfiltered_260      c     1.000000E-04     9.999995E-01     1.000000E+00          u
+        261  density_unfiltered_261      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        262  density_unfiltered_262      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        263  density_unfiltered_263      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        264  density_unfiltered_264      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        265  density_unfiltered_265      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        266  density_unfiltered_266      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        267  density_unfiltered_267      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        268  density_unfiltered_268      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        269  density_unfiltered_269      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        270  density_unfiltered_270      c     1.000000E-04     9.999136E-05     1.000000E+00          l
+        271  density_unfiltered_271      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        272  density_unfiltered_272      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        273  density_unfiltered_273      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        274  density_unfiltered_274      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        275  density_unfiltered_275      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        276  density_unfiltered_276      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        277  density_unfiltered_277      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        278  density_unfiltered_278      c     1.000000E-04     9.999071E-05     1.000000E+00          l
+        279  density_unfiltered_279      c     1.000000E-04     9.999082E-05     1.000000E+00          l
+        280  density_unfiltered_280      c     1.000000E-04     9.999053E-05     1.000000E+00          l
+        281  density_unfiltered_281      c     1.000000E-04     9.999030E-05     1.000000E+00          l
+        282  density_unfiltered_282      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        283  density_unfiltered_283      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        284  density_unfiltered_284      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        285  density_unfiltered_285      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        286  density_unfiltered_286      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        287  density_unfiltered_287      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        288  density_unfiltered_288      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        289  density_unfiltered_289      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        290  density_unfiltered_290      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        291  density_unfiltered_291      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        292  density_unfiltered_292      c     1.000000E-04     9.999104E-05     1.000000E+00          l
+        293  density_unfiltered_293      c     1.000000E-04     9.999121E-05     1.000000E+00          l
+        294  density_unfiltered_294      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        295  density_unfiltered_295      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        296  density_unfiltered_296      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        297  density_unfiltered_297      c     1.000000E-04     9.999064E-05     1.000000E+00          l
+        298  density_unfiltered_298      c     1.000000E-04     9.999995E-01     1.000000E+00          u
+        299  density_unfiltered_299      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        300  density_unfiltered_300      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        301  density_unfiltered_301      c     1.000000E-04     9.999985E-01     1.000000E+00           
+        302  density_unfiltered_302      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        303  density_unfiltered_303      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        304  density_unfiltered_304      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        305  density_unfiltered_305      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        306  density_unfiltered_306      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        307  density_unfiltered_307      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        308  density_unfiltered_308      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        309  density_unfiltered_309      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        310  density_unfiltered_310      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        311  density_unfiltered_311      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        312  density_unfiltered_312      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        313  density_unfiltered_313      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        314  density_unfiltered_314      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        315  density_unfiltered_315      c     1.000000E-04     9.999065E-05     1.000000E+00          l
+        316  density_unfiltered_316      c     1.000000E-04     9.999085E-05     1.000000E+00          l
+        317  density_unfiltered_317      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        318  density_unfiltered_318      c     1.000000E-04     9.999992E-01     1.000000E+00          u
+        319  density_unfiltered_319      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        320  density_unfiltered_320      c     1.000000E-04     9.999037E-05     1.000000E+00          l
+        321  density_unfiltered_321      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        322  density_unfiltered_322      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        323  density_unfiltered_323      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        324  density_unfiltered_324      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        325  density_unfiltered_325      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        326  density_unfiltered_326      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        327  density_unfiltered_327      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        328  density_unfiltered_328      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        329  density_unfiltered_329      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        330  density_unfiltered_330      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        331  density_unfiltered_331      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        332  density_unfiltered_332      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        333  density_unfiltered_333      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        334  density_unfiltered_334      c     1.000000E-04     9.999999E-01     1.000000E+00          u
+        335  density_unfiltered_335      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        336  density_unfiltered_336      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        337  density_unfiltered_337      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        338  density_unfiltered_338      c     1.000000E-04     9.999052E-05     1.000000E+00          l
+        339  density_unfiltered_339      c     1.000000E-04     9.999059E-05     1.000000E+00          l
+        340  density_unfiltered_340      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        341  density_unfiltered_341      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        342  density_unfiltered_342      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        343  density_unfiltered_343      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        344  density_unfiltered_344      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        345  density_unfiltered_345      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        346  density_unfiltered_346      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        347  density_unfiltered_347      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        348  density_unfiltered_348      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        349  density_unfiltered_349      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        350  density_unfiltered_350      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        351  density_unfiltered_351      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        352  density_unfiltered_352      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        353  density_unfiltered_353      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        354  density_unfiltered_354      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        355  density_unfiltered_355      c     1.000000E-04     9.999995E-01     1.000000E+00          u
+        356  density_unfiltered_356      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        357  density_unfiltered_357      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        358  density_unfiltered_358      c     1.000000E-04     9.999999E-01     1.000000E+00          u
+        359  density_unfiltered_359      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        360  density_unfiltered_360      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        361  density_unfiltered_361      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        362  density_unfiltered_362      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        363  density_unfiltered_363      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        364  density_unfiltered_364      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        365  density_unfiltered_365      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        366  density_unfiltered_366      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        367  density_unfiltered_367      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        368  density_unfiltered_368      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        369  density_unfiltered_369      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        370  density_unfiltered_370      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        371  density_unfiltered_371      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        372  density_unfiltered_372      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        373  density_unfiltered_373      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        374  density_unfiltered_374      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        375  density_unfiltered_375      c     1.000000E-04     9.999999E-01     1.000000E+00          u
+        376  density_unfiltered_376      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        377  density_unfiltered_377      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        378  density_unfiltered_378      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        379  density_unfiltered_379      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        380  density_unfiltered_380      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        381  density_unfiltered_381      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        382  density_unfiltered_382      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        383  density_unfiltered_383      c     1.000000E-04     9.999997E-01     1.000000E+00          u
+        384  density_unfiltered_384      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        385  density_unfiltered_385      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        386  density_unfiltered_386      c     1.000000E-04     9.999994E-01     1.000000E+00          u
+        387  density_unfiltered_387      c     1.000000E-04     9.999998E-01     1.000000E+00          u
+        388  density_unfiltered_388      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        389  density_unfiltered_389      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        390  density_unfiltered_390      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        391  density_unfiltered_391      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        392  density_unfiltered_392      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        393  density_unfiltered_393      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        394  density_unfiltered_394      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        395  density_unfiltered_395      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        396  density_unfiltered_396      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        397  density_unfiltered_397      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        398  density_unfiltered_398      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        399  density_unfiltered_399      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        400  density_unfiltered_400      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        401  density_unfiltered_401      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        402  density_unfiltered_402      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        403  density_unfiltered_403      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        404  density_unfiltered_404      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        405  density_unfiltered_405      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        406  density_unfiltered_406      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        407  density_unfiltered_407      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        408  density_unfiltered_408      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        409  density_unfiltered_409      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        410  density_unfiltered_410      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        411  density_unfiltered_411      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        412  density_unfiltered_412      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        413  density_unfiltered_413      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        414  density_unfiltered_414      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        415  density_unfiltered_415      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        416  density_unfiltered_416      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        417  density_unfiltered_417      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        418  density_unfiltered_418      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        419  density_unfiltered_419      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        420  density_unfiltered_420      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        421  density_unfiltered_421      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        422  density_unfiltered_422      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        423  density_unfiltered_423      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        424  density_unfiltered_424      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        425  density_unfiltered_425      c     1.000000E-04     9.999994E-01     1.000000E+00          u
+        426  density_unfiltered_426      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        427  density_unfiltered_427      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        428  density_unfiltered_428      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        429  density_unfiltered_429      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        430  density_unfiltered_430      c     1.000000E-04     9.999932E-01     1.000000E+00           
+        431  density_unfiltered_431      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        432  density_unfiltered_432      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        433  density_unfiltered_433      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        434  density_unfiltered_434      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        435  density_unfiltered_435      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        436  density_unfiltered_436      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        437  density_unfiltered_437      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        438  density_unfiltered_438      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        439  density_unfiltered_439      c     1.000000E-04     9.999988E-01     1.000000E+00           
+        440  density_unfiltered_440      c     1.000000E-04     9.999046E-05     1.000000E+00          l
+        441  density_unfiltered_441      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        442  density_unfiltered_442      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        443  density_unfiltered_443      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        444  density_unfiltered_444      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        445  density_unfiltered_445      c     1.000000E-04     9.999999E-01     1.000000E+00          u
+        446  density_unfiltered_446      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        447  density_unfiltered_447      c     1.000000E-04     9.999029E-05     1.000000E+00          l
+        448  density_unfiltered_448      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        449  density_unfiltered_449      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        450  density_unfiltered_450      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        451  density_unfiltered_451      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        452  density_unfiltered_452      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        453  density_unfiltered_453      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        454  density_unfiltered_454      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        455  density_unfiltered_455      c     1.000000E-04     9.999068E-05     1.000000E+00          l
+        456  density_unfiltered_456      c     1.000000E-04     9.999051E-05     1.000000E+00          l
+        457  density_unfiltered_457      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        458  density_unfiltered_458      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        459  density_unfiltered_459      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        460  density_unfiltered_460      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        461  density_unfiltered_461      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        462  density_unfiltered_462      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        463  density_unfiltered_463      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        464  density_unfiltered_464      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        465  density_unfiltered_465      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        466  density_unfiltered_466      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        467  density_unfiltered_467      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        468  density_unfiltered_468      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        469  density_unfiltered_469      c     1.000000E-04     9.999104E-05     1.000000E+00          l
+        470  density_unfiltered_470      c     1.000000E-04     9.999072E-05     1.000000E+00          l
+        471  density_unfiltered_471      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        472  density_unfiltered_472      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        473  density_unfiltered_473      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        474  density_unfiltered_474      c     1.000000E-04     9.999998E-01     1.000000E+00          u
+        475  density_unfiltered_475      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        476  density_unfiltered_476      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        477  density_unfiltered_477      c     1.000000E-04     9.999066E-05     1.000000E+00          l
+        478  density_unfiltered_478      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        479  density_unfiltered_479      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        480  density_unfiltered_480      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        481  density_unfiltered_481      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        482  density_unfiltered_482      c     1.000000E-04     9.999117E-05     1.000000E+00          l
+        483  density_unfiltered_483      c     1.000000E-04     9.999964E-01     1.000000E+00           
+        484  density_unfiltered_484      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        485  density_unfiltered_485      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        486  density_unfiltered_486      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        487  density_unfiltered_487      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        488  density_unfiltered_488      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        489  density_unfiltered_489      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        490  density_unfiltered_490      c     1.000000E-04     9.999046E-05     1.000000E+00          l
+        491  density_unfiltered_491      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        492  density_unfiltered_492      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        493  density_unfiltered_493      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        494  density_unfiltered_494      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        495  density_unfiltered_495      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        496  density_unfiltered_496      c     1.000000E-04     9.999081E-05     1.000000E+00          l
+        497  density_unfiltered_497      c     1.000000E-04     9.999037E-05     1.000000E+00          l
+        498  density_unfiltered_498      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        499  density_unfiltered_499      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        500  density_unfiltered_500      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        501  density_unfiltered_501      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        502  density_unfiltered_502      c     1.000000E-04     9.999998E-01     1.000000E+00          u
+        503  density_unfiltered_503      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        504  density_unfiltered_504      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        505  density_unfiltered_505      c     1.000000E-04     9.999056E-05     1.000000E+00          l
+        506  density_unfiltered_506      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        507  density_unfiltered_507      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        508  density_unfiltered_508      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        509  density_unfiltered_509      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        510  density_unfiltered_510      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        511  density_unfiltered_511      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        512  density_unfiltered_512      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        513  density_unfiltered_513      c     1.000000E-04     9.999046E-05     1.000000E+00          l
+        514  density_unfiltered_514      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        515  density_unfiltered_515      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        516  density_unfiltered_516      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        517  density_unfiltered_517      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        518  density_unfiltered_518      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        519  density_unfiltered_519      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        520  density_unfiltered_520      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        521  density_unfiltered_521      c     1.000000E-04     9.999999E-01     1.000000E+00          u
+        522  density_unfiltered_522      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        523  density_unfiltered_523      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        524  density_unfiltered_524      c     1.000000E-04     9.999988E-01     1.000000E+00           
+        525  density_unfiltered_525      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        526  density_unfiltered_526      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        527  density_unfiltered_527      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        528  density_unfiltered_528      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        529  density_unfiltered_529      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        530  density_unfiltered_530      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        531  density_unfiltered_531      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        532  density_unfiltered_532      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        533  density_unfiltered_533      c     1.000000E-04     9.999997E-01     1.000000E+00          u
+        534  density_unfiltered_534      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        535  density_unfiltered_535      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        536  density_unfiltered_536      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        537  density_unfiltered_537      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        538  density_unfiltered_538      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        539  density_unfiltered_539      c     1.000000E-04     9.999999E-01     1.000000E+00          u
+        540  density_unfiltered_540      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        541  density_unfiltered_541      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        542  density_unfiltered_542      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        543  density_unfiltered_543      c     1.000000E-04     9.999996E-01     1.000000E+00          u
+        544  density_unfiltered_544      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        545  density_unfiltered_545      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        546  density_unfiltered_546      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        547  density_unfiltered_547      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        548  density_unfiltered_548      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        549  density_unfiltered_549      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        550  density_unfiltered_550      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        551  density_unfiltered_551      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        552  density_unfiltered_552      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        553  density_unfiltered_553      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        554  density_unfiltered_554      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        555  density_unfiltered_555      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        556  density_unfiltered_556      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        557  density_unfiltered_557      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        558  density_unfiltered_558      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        559  density_unfiltered_559      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        560  density_unfiltered_560      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        561  density_unfiltered_561      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        562  density_unfiltered_562      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        563  density_unfiltered_563      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        564  density_unfiltered_564      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        565  density_unfiltered_565      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        566  density_unfiltered_566      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        567  density_unfiltered_567      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        568  density_unfiltered_568      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        569  density_unfiltered_569      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        570  density_unfiltered_570      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        571  density_unfiltered_571      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        572  density_unfiltered_572      c     1.000000E-04     9.999999E-01     1.000000E+00          u
+        573  density_unfiltered_573      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        574  density_unfiltered_574      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        575  density_unfiltered_575      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        576  density_unfiltered_576      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        577  density_unfiltered_577      c     1.000000E-04     9.999999E-01     1.000000E+00          u
+        578  density_unfiltered_578      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        579  density_unfiltered_579      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        580  density_unfiltered_580      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        581  density_unfiltered_581      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        582  density_unfiltered_582      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        583  density_unfiltered_583      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        584  density_unfiltered_584      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        585  density_unfiltered_585      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        586  density_unfiltered_586      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        587  density_unfiltered_587      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        588  density_unfiltered_588      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        589  density_unfiltered_589      c     1.000000E-04     9.999999E-01     1.000000E+00          u
+        590  density_unfiltered_590      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        591  density_unfiltered_591      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        592  density_unfiltered_592      c     1.000000E-04     9.999996E-01     1.000000E+00          u
+        593  density_unfiltered_593      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        594  density_unfiltered_594      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        595  density_unfiltered_595      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        596  density_unfiltered_596      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        597  density_unfiltered_597      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        598  density_unfiltered_598      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        599  density_unfiltered_599      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        600  density_unfiltered_600      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        601  density_unfiltered_601      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        602  density_unfiltered_602      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        603  density_unfiltered_603      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        604  density_unfiltered_604      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        605  density_unfiltered_605      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        606  density_unfiltered_606      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        607  density_unfiltered_607      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        608  density_unfiltered_608      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        609  density_unfiltered_609      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        610  density_unfiltered_610      c     1.000000E-04     9.999998E-01     1.000000E+00          u
+        611  density_unfiltered_611      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        612  density_unfiltered_612      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        613  density_unfiltered_613      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        614  density_unfiltered_614      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        615  density_unfiltered_615      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        616  density_unfiltered_616      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        617  density_unfiltered_617      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        618  density_unfiltered_618      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        619  density_unfiltered_619      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        620  density_unfiltered_620      c     1.000000E-04     9.999996E-01     1.000000E+00          u
+        621  density_unfiltered_621      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        622  density_unfiltered_622      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        623  density_unfiltered_623      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        624  density_unfiltered_624      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        625  density_unfiltered_625      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        626  density_unfiltered_626      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        627  density_unfiltered_627      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        628  density_unfiltered_628      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        629  density_unfiltered_629      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        630  density_unfiltered_630      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        631  density_unfiltered_631      c     1.000000E-04     9.999999E-01     1.000000E+00          u
+        632  density_unfiltered_632      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        633  density_unfiltered_633      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        634  density_unfiltered_634      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        635  density_unfiltered_635      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        636  density_unfiltered_636      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        637  density_unfiltered_637      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        638  density_unfiltered_638      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        639  density_unfiltered_639      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        640  density_unfiltered_640      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        641  density_unfiltered_641      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        642  density_unfiltered_642      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        643  density_unfiltered_643      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        644  density_unfiltered_644      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        645  density_unfiltered_645      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        646  density_unfiltered_646      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        647  density_unfiltered_647      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        648  density_unfiltered_648      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        649  density_unfiltered_649      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        650  density_unfiltered_650      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        651  density_unfiltered_651      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        652  density_unfiltered_652      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        653  density_unfiltered_653      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        654  density_unfiltered_654      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        655  density_unfiltered_655      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        656  density_unfiltered_656      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        657  density_unfiltered_657      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        658  density_unfiltered_658      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        659  density_unfiltered_659      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        660  density_unfiltered_660      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        661  density_unfiltered_661      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        662  density_unfiltered_662      c     1.000000E-04     9.999999E-01     1.000000E+00          u
+        663  density_unfiltered_663      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        664  density_unfiltered_664      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        665  density_unfiltered_665      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        666  density_unfiltered_666      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        667  density_unfiltered_667      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        668  density_unfiltered_668      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        669  density_unfiltered_669      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        670  density_unfiltered_670      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        671  density_unfiltered_671      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        672  density_unfiltered_672      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        673  density_unfiltered_673      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        674  density_unfiltered_674      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        675  density_unfiltered_675      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        676  density_unfiltered_676      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        677  density_unfiltered_677      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        678  density_unfiltered_678      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        679  density_unfiltered_679      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        680  density_unfiltered_680      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        681  density_unfiltered_681      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        682  density_unfiltered_682      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        683  density_unfiltered_683      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        684  density_unfiltered_684      c     1.000000E-04     9.999999E-01     1.000000E+00          u
+        685  density_unfiltered_685      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        686  density_unfiltered_686      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        687  density_unfiltered_687      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        688  density_unfiltered_688      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        689  density_unfiltered_689      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        690  density_unfiltered_690      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        691  density_unfiltered_691      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        692  density_unfiltered_692      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        693  density_unfiltered_693      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        694  density_unfiltered_694      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        695  density_unfiltered_695      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+        696  density_unfiltered_696      c     1.000000E-04     1.000000E+00     1.000000E+00          u
+
+   Constraints (i - inequality, e - equality)
+      Index  Name          Type          Lower           Value           Upper    Status  Lagrange Multiplier
+          0  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -4.16946E+02
+          1  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -6.53725E+02
+          2  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -1.07596E+02
+          3  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -1.18237E+02
+          4  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -1.36841E+02
+          5  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -1.55148E+02
+          6  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -2.01449E+02
+          7  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -5.26093E+02
+          8  density          e   1.000000E+00    9.960063E-01    1.000000E+00         E    -1.00000E+03
+          9  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -4.87587E+02
+         10  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -2.30584E+02
+         11  density          e   1.000000E+00    1.000000E+00    1.000000E+00               6.20618E+01
+         12  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -9.99815E+02
+         13  density          e   1.000000E+00    9.982733E-01    1.000000E+00         E    -1.00000E+03
+         14  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -1.11078E+02
+         15  density          e   1.000000E+00    1.000000E+00    1.000000E+00               7.35599E+02
+         16  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -2.58502E+02
+         17  density          e   1.000000E+00    1.000000E+00    1.000000E+00               3.61524E+02
+         18  density          e   1.000000E+00    1.000000E+00    1.000000E+00               4.87625E+01
+         19  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -6.04748E+02
+         20  density          e   1.000000E+00    9.982203E-01    1.000000E+00         E    -1.00000E+03
+         21  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -9.81672E+02
+         22  density          e   1.000000E+00    9.986742E-01    1.000000E+00         E    -1.00000E+03
+         23  density          e   1.000000E+00    1.000000E+00    1.000000E+00               9.69367E+00
+         24  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -2.04644E+01
+         25  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -1.09868E+02
+         26  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -6.46283E+01
+         27  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -2.03385E+02
+         28  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -5.50953E+01
+         29  density          e   1.000000E+00    9.997204E-01    1.000000E+00         E    -1.00000E+03
+         30  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -3.98894E+02
+         31  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -3.98314E+01
+         32  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -3.41325E+02
+         33  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -1.98192E+02
+         34  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -9.99934E+02
+         35  density          e   1.000000E+00    9.997508E-01    1.000000E+00         E    -1.00000E+03
+         36  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -1.26125E+01
+         37  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -6.54938E+02
+         38  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -2.15376E+02
+         39  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -4.47446E+02
+         40  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -4.25739E+02
+         41  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -3.47882E+02
+         42  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -3.48570E+02
+         43  density          e   1.000000E+00    9.998624E-01    1.000000E+00         E    -1.00000E+03
+         44  density          e   1.000000E+00    1.000000E+00    1.000000E+00               1.90360E+01
+         45  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -4.52709E+01
+         46  density          e   1.000000E+00    1.000000E+00    1.000000E+00               3.07755E+02
+         47  density          e   1.000000E+00    1.000000E+00    1.000000E+00               1.21973E+02
+         48  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -6.11090E+01
+         49  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -5.88981E+02
+         50  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -1.39927E+01
+         51  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -3.74443E+02
+         52  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -6.04651E+02
+         53  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -9.99877E+02
+         54  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -1.24346E+02
+         55  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -9.01240E+02
+         56  density          e   1.000000E+00    1.000000E+00    1.000000E+00               3.14805E+02
+         57  density          e   1.000000E+00    1.000000E+00    1.000000E+00               1.53642E+02
+         58  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -4.64914E+02
+         59  density          e   1.000000E+00    1.000000E+00    1.000000E+00               2.77555E+02
+         60  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -2.61864E+02
+         61  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -1.14681E+02
+         62  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -6.83909E+02
+         63  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -4.82195E+02
+         64  density          e   1.000000E+00    1.000000E+00    1.000000E+00               3.93893E+02
+         65  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -1.57399E+02
+         66  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -2.74796E+02
+         67  density          e   1.000000E+00    1.000000E+00    1.000000E+00               2.67561E+01
+         68  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -3.39432E+02
+         69  density          e   1.000000E+00    1.000000E+00    1.000000E+00               2.50164E+02
+         70  density          e   1.000000E+00    1.000000E+00    1.000000E+00               1.90312E+02
+         71  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -4.68607E+02
+         72  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -2.83268E+02
+         73  density          e   1.000000E+00    1.000000E+00    1.000000E+00               1.03669E+02
+         74  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -2.29644E+02
+         75  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -2.33030E+02
+         76  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -1.88101E+02
+         77  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -2.17084E+02
+         78  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -5.06935E+02
+         79  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -1.22212E+02
+         80  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -1.55593E+02
+         81  density          e   1.000000E+00    1.000000E+00    1.000000E+00               2.08263E+02
+         82  density          e   1.000000E+00    1.000000E+00    1.000000E+00               3.47723E+02
+         83  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -6.78959E+02
+         84  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -1.68026E+02
+         85  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -5.96244E+02
+         86  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -2.26112E+02
+         87  density          e   1.000000E+00    1.000000E+00    1.000000E+00               5.53460E+02
+         88  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -6.17808E+01
+         89  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -1.56611E+02
+         90  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -7.57041E+01
+         91  density          e   1.000000E+00    1.000000E+00    1.000000E+00               3.68692E+02
+         92  density          e   1.000000E+00    1.000000E+00    1.000000E+00               1.47006E+02
+         93  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -5.95661E+02
+         94  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -2.61584E+02
+         95  density          e   1.000000E+00    1.000000E+00    1.000000E+00               2.94498E+02
+         96  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -2.98205E+02
+         97  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -2.21194E+02
+         98  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -1.88497E+02
+         99  density          e   1.000000E+00    1.000000E+00    1.000000E+00               7.15828E+01
+        100  density          e   1.000000E+00    1.000000E+00    1.000000E+00               3.50144E+02
+        101  density          e   1.000000E+00    1.000000E+00    1.000000E+00               5.75170E+01
+        102  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -4.81160E+02
+        103  density          e   1.000000E+00    1.000000E+00    1.000000E+00              -1.05926E+02
+        104  density          e   1.000000E+00    1.000000E+00    1.000000E+00               2.03606E+02
+        105  avg_density_p    i  -1.000000E+20    7.625808E-01    5.100000E-01         U     1.00000E+03
+        106  t_max            i  -1.000000E+20    4.930815E+01    5.500000E+01               6.68752E-10
+
+
+   Exit Status
+      Inform  Description
+           2  Infeasible Problem Detected
+--------------------------------------------------------------------------------
+
+[Finished in 23.8s]
