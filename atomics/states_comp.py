@@ -59,6 +59,12 @@ class StatesComp(om.ImplicitComponent):
             'visualization', default='True', 
             values=['True', 'False'],
         )
+        self.options.declare(
+            'num_load_steps', default=8, types=int,
+        )
+        self.options.declare(
+            'fail_on_nonconvergence', default=True, types=bool,
+        )
 
     def setup(self):
         pde_problem = self.options['pde_problem']
@@ -108,6 +114,11 @@ class StatesComp(om.ImplicitComponent):
 
         self.add_output(
             state_name,
+            # OpenMDAO otherwise initializes outputs to one. A zero
+            # displacement is the appropriate first Newton/SNES guess for
+            # mechanics problems, while subsequent evaluations retain the
+            # preceding converged solution as a warm start.
+            val=np.zeros(self._state_layout['global_size']),
             shape=self._state_layout['global_size'],
         )
 
@@ -404,18 +415,34 @@ class StatesComp(om.ImplicitComponent):
         residual_vector = fem_petsc.create_vector(problem.L)
         jacobian_matrix = fem_petsc.create_matrix(problem.a)
 
+        # Keep the SNES solution vector separate from the DOLFINx
+        # Function vector. During a line search, PETSc may evaluate the
+        # residual at a temporary trial vector. The UFL forms, however,
+        # evaluate state_function, so every trial vector must first be
+        # copied into state_function.
+        state_vector = state_function.x.petsc_vec
+        solution_vector = state_vector.copy()
+
         snes = PETSc.SNES().create(
             state_function.function_space.mesh.comm
         )
 
-        def assemble_residual(_snes, x, b):
-            # Synchronize the current SNES iterate before assembling.
+        def update_state(x):
+            """Copy the current SNES iterate into state_function."""
+            # Synchronize ghost entries of the SNES trial vector.
             problem.form(x)
+
+            # Copy the current trial values into the Function used as
+            # the coefficient in the residual and Jacobian forms.
+            x.copy(state_vector)
+            state_function.x.scatter_forward()
+
+        def assemble_residual(_snes, x, b):
+            update_state(x)
             problem.F(x, b)
 
         def assemble_jacobian(_snes, x, A, P):
-            # A and P are the same matrix in this component.
-            problem.form(x)
+            update_state(x)
             problem.J(x, A)
 
             if P.handle != A.handle:
@@ -445,23 +472,35 @@ class StatesComp(om.ImplicitComponent):
 
             snes.setFromOptions()
 
-            # DOLFINx 0.9 exposes the PETSc vector through
-            # Function.x.petsc_vec. SNES updates it in place.
+            # Solve using a vector that is independent of the DOLFINx
+            # Function vector. The callbacks synchronize the Function
+            # for every SNES/line-search evaluation.
             snes.solve(
                 None,
-                state_function.x.petsc_vec,
+                solution_vector,
             )
-            state_function.x.scatter_forward()
+
+            # Transfer the final accepted SNES solution back to the
+            # DOLFINx Function.
+            update_state(solution_vector)
 
             converged_reason = snes.getConvergedReason()
+            residual_norm = snes.getFunctionNorm()
             if converged_reason < 0:
-                print(
-                    "Warning: PETSc SNES did not converge for state "
+                message = (
+                    "PETSc SNES did not converge for state "
                     f"'{self.options['state_name']}'. "
-                    f"Converged reason: {converged_reason}"
+                    f"Converged reason: {converged_reason}; "
+                    f"residual norm: {residual_norm:.6e}."
                 )
+
+                if self.options['fail_on_nonconvergence']:
+                    raise RuntimeError(message)
+
+                print("Warning: " + message)
         finally:
             snes.destroy()
+            solution_vector.destroy()
             jacobian_matrix.destroy()
             residual_vector.destroy()
 
@@ -553,8 +592,9 @@ class StatesComp(om.ImplicitComponent):
             )
 
         elif problem_type == 'nonlinear_problem':
-            state_function.x.array[:] = 0.0
-            state_function.x.scatter_forward()
+
+            # Keep the state supplied by OpenMDAO as a warm start. During
+            # optimization this is normally the preceding converged state.
 
             self._solve_residual(
                 residual_form,
@@ -563,9 +603,10 @@ class StatesComp(om.ImplicitComponent):
                 {
                     "snes_type": "newtonls",
                     "snes_linesearch_type": "bt",
-                    "snes_max_it": 500,
-                    "snes_rtol": 5.0e-100,
-                    "snes_atol": 5.0e-50,
+                    "snes_max_it": 100,
+                    "snes_rtol": 1.0e-8,
+                    "snes_atol": 1.0e-10,
+                    "snes_stol": 1.0e-12,
                     "snes_error_if_not_converged": False,
                     "ksp_type": "preonly",
                     "pc_type": "lu",
@@ -578,7 +619,11 @@ class StatesComp(om.ImplicitComponent):
             state_function.x.array[:] = 0.0
             state_function.x.scatter_forward()
 
-            num_steps = 4
+            num_steps = self.options['num_load_steps']
+            if num_steps < 1:
+                raise ValueError(
+                    "num_load_steps must be at least one."
+                )
 
             # The original load-stepping implementation called an
             # application-specific get_residual_form function and used an
@@ -614,9 +659,10 @@ class StatesComp(om.ImplicitComponent):
                     {
                         "snes_type": "newtonls",
                         "snes_linesearch_type": "bt",
-                        "snes_max_it": 500,
-                        "snes_rtol": 1.0e-15,
-                        "snes_atol": 1.0e-15,
+                        "snes_max_it": 100,
+                        "snes_rtol": 1.0e-8,
+                        "snes_atol": 1.0e-10,
+                        "snes_stol": 1.0e-12,
                         "snes_error_if_not_converged": False,
                         "ksp_type": "preonly",
                         "pc_type": "lu",

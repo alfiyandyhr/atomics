@@ -57,19 +57,32 @@ class AtomicsGroup(om.Group):
             default='False',
             values=['True', 'False'],
         )
+        self.options.declare(
+            'num_load_steps', default=8, types=int,
+        )
+        self.options.declare(
+            'fail_on_nonconvergence', default=True, types=bool,
+        )
 
     def setup(self):
         pde_problem = self.options['pde_problem']
         linear_solver_ = self.options['linear_solver_']
         problem_type = self.options['problem_type']
         visualization = self.options['visualization']
+        num_load_steps = self.options['num_load_steps']
+        fail_on_nonconvergence = \
+            self.options['fail_on_nonconvergence']
 
         for state_name in pde_problem.states_dict:
-            comp = StatesComp(pde_problem=pde_problem,
-                              state_name=state_name,
-                              linear_solver_=linear_solver_,
-                              problem_type=problem_type,
-                              visualization=visualization)
+            comp = StatesComp(
+                pde_problem=pde_problem,
+                state_name=state_name,
+                linear_solver_=linear_solver_,
+                problem_type=problem_type,
+                visualization=visualization,
+                num_load_steps=num_load_steps,
+                fail_on_nonconvergence=fail_on_nonconvergence,
+            )
             self.add_subsystem('{}_states_comp'.format(state_name),
                                comp,
                                promotes=['*'])

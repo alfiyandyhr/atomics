@@ -33,6 +33,22 @@ class PDEProblem(object):
             arguments=arguments,
         )
 
+    def add_load_step_residual(self, state_name, residual_factory):
+        """
+        Register a load-stepping residual factory for a state.
+
+        The callable must accept ``(load_factor, final_step)`` and return
+        the UFL residual form for that load step.
+        """
+        if state_name not in self.states_dict:
+            raise KeyError(
+                "Cannot register load stepping for unknown state {!r}."
+                .format(state_name)
+            )
+        self.states_dict[state_name][
+            'load_step_residual_form'
+        ] = residual_factory
+
     def add_scalar_output(self, name, form, *arguments):
         self.scalar_outputs_dict[name] = dict(
             form=form,
